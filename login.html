@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Đăng Nhập | TeamSync - Hệ Thống Quản Lý & Làm Bài Tập Nhóm</title>
+  <meta name="description"
+    content="Trang đăng nhập nền tảng TeamSync dành cho sinh viên IT4409. Đăng nhập để quản lý phân công nhiệm vụ, bầu chọn nhóm trưởng, thảo luận và theo dõi tiến độ nộp bài.">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Favicon biểu tượng thương hiệu -->
+  <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg">
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/modules.css">
+  <link rel="stylesheet" href="./css/login.css">
+</head>
+
+<body class="login-page-body">
+
+  <!-- Hiệu ứng Ambient Glow mờ ảo phía sau -->
+  <div class="login-ambient-blob blob-1"></div>
+  <div class="login-ambient-blob blob-2"></div>
+
+  <!-- TOAST CONTAINER THÔNG BÁO -->
+  <div class="login-toast-container" id="loginToastContainer"></div>
+
+  <!-- HEADER BAR TRÊN CÙNG -->
+  <header class="login-header-bar">
+    <a href="login.html" class="login-brand" title="TeamSync - Trang đăng nhập">
+      <div class="login-brand-logo">T</div>
+      <div class="login-brand-text">
+        <h1 style="font-size: 1.25rem;">TeamSync</h1>
+        <span>Bài Tập Nhóm 4.0</span>
+      </div>
+    </a>
+
+    <div class="login-header-badge">
+      <span class="status-dot-pulse"></span>
+      <span>Học kỳ 1 - 2026 • Đề tài IT4409</span>
+    </div>
+  </header>
+
+  <!-- VÙNG NỘI DUNG CHÍNH (TWO-COLUMN GRID) -->
+  <main class="login-main-wrapper">
+    <div class="login-grid">
+
+      <!-- CỘT TRÁI: GIỚI THIỆU TÍNH NĂNG & THÔNG TIN NHÓM (HERO SHOWCASE) -->
+      <section class="login-showcase">
+        <div class="login-hero-tag">
+          <span>🚀 Nền Tảng Số Hóa Đồ Án Sinh Viên</span>
+        </div>
+
+        <h2 class="login-hero-title">
+          Kết Nối Nhịp Nhàng.<br>
+          <span class="highlight-gradient">Hợp Tác Công Bằng.</span><br>
+          Tiến Độ Vượt Trội.
+        </h2>
+
+        <p class="login-hero-desc">
+          Giải pháp toàn diện tối ưu hóa hiệu quả làm việc nhóm: từ phân chia nhiệm vụ, bầu cử nhóm trưởng minh bạch,
+          thảo luận trực tuyến đến kiểm soát các phiên bản nộp bài chuẩn quy cách.
+        </p>
+
+        <!-- 4 Khối tính năng cốt lõi -->
+        <div class="login-features-grid">
+          <div class="login-feature-card">
+            <span class="feature-icon-badge">📋</span>
+            <div class="feature-title">Phân Chia Nhiệm Vụ</div>
+            <p class="feature-desc">Nhận task 1-chạm, cảnh báo deadline và phân định rõ trách nhiệm.</p>
+          </div>
+
+          <div class="login-feature-card">
+            <span class="feature-icon-badge">🗳️</span>
+            <div class="feature-title">Bầu Cử Trưởng Nhóm</div>
+            <p class="feature-desc">Bỏ phiếu dân chủ, ứng cử minh bạch với tỷ lệ bình chọn trực quan.</p>
+          </div>
+
+          <div class="login-feature-card">
+            <span class="feature-icon-badge">💬</span>
+            <div class="feature-title">Thảo Luận Trực Tuyến</div>
+            <p class="feature-desc">Kênh chat nhóm theo thời gian thực và đính kèm tài liệu tham khảo.</p>
+          </div>
+
+          <div class="login-feature-card">
+            <span class="feature-icon-badge">📤</span>
+            <div class="feature-title">Lưu Vết Nộp Bài v1.3</div>
+            <p class="feature-desc">Theo dõi tiến trình hoàn thiện và nhật ký nộp bài qua các đợt.</p>
+          </div>
+        </div>
+
+        <!-- Thẻ tóm tắt thông tin Nhóm 05 -->
+        <div class="login-group-summary-card">
+          <div class="group-summary-top">
+            <span class="group-summary-code">WEB2026-N05</span>
+            <span style="font-size: 0.8rem; color: #94A3B8;">TS. Trần Văn Nam hướng dẫn</span>
+          </div>
+          <div class="group-summary-topic">
+            Nhóm 05 - Xây dựng nền tảng số hóa quản lý và cộng tác làm bài tập nhóm sinh viên
+          </div>
+          <div class="group-summary-footer">
+            <div class="avatar-stack" id="heroAvatarStack">
+              <!-- Render tự động bởi login.js -->
+            </div>
+            <span class="team-online-count">5 thành viên sẵn sàng</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CỘT PHẢI: KHỐI FORM ĐĂNG NHẬP / CHỌN NHANH / ĐĂNG KÝ -->
+      <section class="login-auth-card" aria-label="Biểu mẫu đăng nhập và đăng ký tài khoản">
+
+        <!-- Banner cảnh báo nếu đã có phiên đăng nhập -->
+        <div class="login-active-session-banner" id="activeSessionBanner" style="display: none;">
+          <div class="active-session-info">
+            <img id="activeSessionAvatar" class="active-session-avatar" src="" alt="Avatar">
+            <div class="active-session-text">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Phiên đăng nhập hiện tại:</div>
+              <div style="font-weight: 700; color: #1E293B;" id="activeSessionName">...</div>
+              <div style="font-size: 0.75rem; color: var(--color-primary);" id="activeSessionRole">...</div>
+            </div>
+          </div>
+          <div class="active-session-actions">
+            <button type="button" class="btn btn-primary" id="btnActiveSessionEnter" style="flex: 1; padding: 0.5rem; font-size: 0.85rem;">
+              🚀 Vào Bảng Làm Việc
+            </button>
+            <button type="button" class="btn btn-secondary" id="btnActiveSessionLogout" style="padding: 0.5rem 0.75rem; font-size: 0.85rem; color: var(--status-danger);">
+              🚪 Đăng Xuất
+            </button>
+          </div>
+        </div>
+
+        <!-- Tiêu đề Thẻ Auth -->
+        <div class="auth-card-header">
+          <h3 class="auth-card-title">Đăng Nhập Tài Khoản</h3>
+          <p class="auth-card-subtitle">Nhập thông tin sinh viên hoặc nhấp chọn nhanh thành viên demo</p>
+        </div>
+
+        <!-- Thanh chuyển đổi Tabs -->
+        <nav class="auth-tabs-nav" role="tablist">
+          <button type="button" class="auth-tab-btn active" id="tabLogin" role="tab">
+            <span>🔑</span>
+            <span>Đăng Nhập</span>
+          </button>
+          <button type="button" class="auth-tab-btn" id="tabDemo" role="tab">
+            <span>⚡</span>
+            <span>Chọn Nhanh Demo</span>
+          </button>
+          <button type="button" class="auth-tab-btn" id="tabRegister" role="tab">
+            <span>✏️</span>
+            <span>Đăng Ký</span>
+          </button>
+        </nav>
+
+        <!-- ==================================================================
+             PANEL 1: FORM ĐĂNG NHẬP CHÍNH
+             ================================================================== -->
+        <div id="panelLogin" role="tabpanel">
+          <form class="auth-form" id="mainLoginForm" novalidate>
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="loginQuery">
+                <span>Email sinh viên hoặc MSSV (*):</span>
+              </label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">👤</span>
+                <input type="text" id="loginQuery" class="auth-input"
+                  placeholder="Ví dụ: haidang.nguyen@student.edu.vn hoặc 20210123" required autocomplete="username">
+              </div>
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="loginPassword">
+                <span>Mật khẩu (*):</span>
+              </label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">🔒</span>
+                <input type="password" id="loginPassword" class="auth-input auth-input-password"
+                  placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)..." required autocomplete="current-password"
+                  value="123456">
+                <button type="button" class="btn-toggle-eye" data-target="loginPassword" title="Hiện hoặc ẩn mật khẩu">
+                  👁
+                </button>
+              </div>
+            </div>
+
+            <div class="auth-row-options">
+              <label class="remember-label">
+                <input type="checkbox" id="loginRemember" checked>
+                <span>Ghi nhớ đăng nhập</span>
+              </label>
+              <a href="#" class="forgot-password-link" id="forgotPasswordLink">Quên mật khẩu?</a>
+            </div>
+
+            <button type="submit" class="btn-auth-submit" id="btnLoginSubmit">
+              <span>Đăng Nhập Vào Hệ Thống</span>
+              <span>➔</span>
+            </button>
+          </form>
+
+          <!-- Nút Đăng Nhập Nhanh 1-Chạm với các thành viên demo -->
+          <div class="auth-quick-section">
+            <div class="quick-section-title">
+              <span>⚡</span>
+              <span>Đăng nhập nhanh 1-chạm (Demo):</span>
+            </div>
+            <div class="quick-members-list" id="quickLoginPillsList">
+              <!-- Render tự động bởi login.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             PANEL 2: DANH SÁCH CHỌN THÀNH VIÊN DEMO TRỰC QUAN
+             ================================================================== -->
+        <div id="panelDemo" role="tabpanel" style="display: none;">
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Nhấp vào bất kỳ thành viên nào bên dưới để đăng nhập ngay lập tức với quyền hạn tương ứng:
+          </div>
+          <div class="demo-members-grid" id="demoMembersGrid">
+            <!-- Render tự động bởi login.js -->
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             PANEL 3: ĐĂNG KÝ THÀNH VIÊN MỚI
+             ================================================================== -->
+        <div id="panelRegister" role="tabpanel" style="display: none;">
+          <form class="auth-form" id="mainRegisterForm" novalidate>
+            <div class="auth-grid-2col">
+              <div class="auth-form-group">
+                <label class="auth-form-label" for="regName">Họ và tên (*):</label>
+                <div class="auth-input-wrapper">
+                  <span class="auth-input-icon">👤</span>
+                  <input type="text" id="regName" class="auth-input" placeholder="Nguyễn Văn A" required>
+                </div>
+              </div>
+
+              <div class="auth-form-group">
+                <label class="auth-form-label" for="regStudentId">MSSV (*):</label>
+                <div class="auth-input-wrapper">
+                  <span class="auth-input-icon">🎓</span>
+                  <input type="text" id="regStudentId" class="auth-input" placeholder="20210999" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-form-label" for="regEmail">Email sinh viên (*):</label>
+              <div class="auth-input-wrapper">
+                <span class="auth-input-icon">✉️</span>
+                <input type="email" id="regEmail" class="auth-input" placeholder="vana.nguyen@student.edu.vn" required
+                  autocomplete="email">
+              </div>
+            </div>
+
+            <div class="auth-grid-2col">
+              <div class="auth-form-group">
+                <label class="auth-form-label" for="regPassword">Mật khẩu (*):</label>
+                <div class="auth-input-wrapper">
+                  <span class="auth-input-icon">🔒</span>
+                  <input type="password" id="regPassword" class="auth-input auth-input-password"
+                    placeholder="Tối thiểu 6 ký tự" required autocomplete="new-password">
+                  <button type="button" class="btn-toggle-eye" data-target="regPassword" title="Hiện hoặc ẩn mật khẩu">
+                    👁
+                  </button>
+                </div>
+              </div>
+
+              <div class="auth-form-group">
+                <label class="auth-form-label" for="regPasswordConfirm">Xác nhận (*):</label>
+                <div class="auth-input-wrapper">
+                  <span class="auth-input-icon">🔒</span>
+                  <input type="password" id="regPasswordConfirm" class="auth-input"
+                    placeholder="Nhập lại mật khẩu" required autocomplete="new-password">
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-auth-submit" id="btnRegisterSubmit">
+              <span>Tạo Tài Khoản & Vào Hệ Thống</span>
+              <span>🚀</span>
+            </button>
+          </form>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- CHÂN TRANG FOOTER -->
+  <footer class="login-footer-bar">
+    <div>Bản quyền © 2026 TeamSync • Nền tảng Hỗ trợ Bài Tập Nhóm • IT4409 Lập trình Web & Ứng dụng Phân tán</div>
+    <div style="margin-top: 0.35rem; font-size: 0.75rem; opacity: 0.75;">
+      Mô phỏng lưu trữ Frontend bằng LocalStorage • Không yêu cầu backend server
+    </div>
+  </footer>
+
+  <!-- TẬP LỆNH DỮ LIỆU & LOGIC -->
+  <script src="./data/mockData.js"></script>
+  <script src="./js/login.js"></script>
+</body>
+
+</html>

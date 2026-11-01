@@ -1,0 +1,832 @@
+/* ==========================================================================
+   MODULES.CSS - STYLES CHO CÁC MODULE CHỨC NĂNG
+   Bắt buộc khai báo CSS Variables và @media (max-width: 768px)
+   ========================================================================== */
+
+:root {
+  /* Biến CSS dành riêng cho các Module */
+  --stat-icon-size: 48px;
+  --candidate-card-radius: 12px;
+  --chat-box-height: 520px;
+  --timeline-line-width: 2px;
+  --timeline-node-size: 28px;
+  --dropzone-min-height: 140px;
+  --progress-bar-height: 10px;
+}
+
+/* ==========================================================================
+   MODULE 9 & OVERVIEW: DASHBOARD STATS WIDGETS
+   ========================================================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--bg-card, #FFFFFF);
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-md, 12px);
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-card, 0 2px 8px rgba(0,0,0,0.05));
+  transition: transform var(--transition-fast, 0.15s ease);
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-icon-wrapper {
+  width: var(--stat-icon-size, 48px);
+  height: var(--stat-icon-size, 48px);
+  border-radius: var(--radius-md, 12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.stat-icon-blue { background-color: #EFF6FF; color: var(--color-primary, #2563EB); }
+.stat-icon-green { background-color: #ECFDF5; color: var(--status-success, #10B981); }
+.stat-icon-amber { background-color: #FFFBEB; color: var(--status-warning, #F59E0B); }
+.stat-icon-purple { background-color: #F3E8FF; color: #8B5CF6; }
+
+.stat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.stat-label {
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--text-muted, #6B7280);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--text-main, #1F2937);
+  margin-top: 0.15rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.stat-subtext {
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--text-muted, #6B7280);
+  margin-top: 0.15rem;
+}
+
+/* Thanh Tiến độ Tổng quan */
+.progress-container {
+  margin: 1.25rem 0;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.progress-track {
+  width: 100%;
+  height: var(--progress-bar-height, 10px);
+  background-color: var(--bg-app, #F3F4F6);
+  border-radius: var(--radius-full, 9999px);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary, #2563EB), #10B981);
+  border-radius: var(--radius-full, 9999px);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   MODULE 2: QUẢN LÝ THÀNH VIÊN (MEMBERS)
+   ========================================================================== */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.member-card {
+  background: var(--bg-card, #FFFFFF);
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-md, 12px);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform var(--transition-fast);
+}
+
+.member-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 0.875rem;
+}
+
+.member-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full, 9999px);
+  object-fit: cover;
+  border: 2px solid #FFFFFF;
+  box-shadow: var(--shadow-sm);
+}
+
+.member-info h4 {
+  font-size: var(--font-size-base, 1rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--text-main, #1F2937);
+}
+
+.member-info p {
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--text-muted, #6B7280);
+}
+
+.member-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.75rem 0;
+}
+
+.skill-tag {
+  background-color: var(--bg-subtle, #F9FAFB);
+  border: 1px solid var(--border-color, #E5E7EB);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-xs, 4px);
+  font-size: 0.7rem;
+  color: var(--text-muted, #6B7280);
+}
+
+.member-stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color, #E5E7EB);
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--text-muted, #6B7280);
+}
+
+/* ==========================================================================
+   MODULE 3: BẦU CHỌN NHÓM TRƯỞNG (ELECTION)
+   ========================================================================== */
+.election-banner {
+  background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+  border: 1px solid var(--color-primary-border, #BFDBFE);
+  border-radius: var(--radius-md, 12px);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.candidates-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.candidate-card {
+  background: var(--bg-card, #FFFFFF);
+  border: 2px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-md, 12px);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+.candidate-card.is-leading {
+  border-color: var(--color-primary, #2563EB);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
+}
+
+.leading-ribbon {
+  position: absolute;
+  top: -10px;
+  right: 14px;
+  background-color: var(--color-primary, #2563EB);
+  color: #FFFFFF;
+  padding: 0.2rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+.candidate-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  margin: 0 auto 0.75rem;
+  border: 3px solid #FFFFFF;
+  box-shadow: var(--shadow-md);
+}
+
+.candidate-name {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main, #1F2937);
+}
+
+.candidate-slogan {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--text-muted, #6B7280);
+  text-align: center;
+  margin: 0.5rem 0 1rem;
+  font-style: italic;
+  flex: 1;
+}
+
+.vote-tally-box {
+  background-color: var(--bg-subtle, #F9FAFB);
+  border-radius: var(--radius-sm, 8px);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.vote-number {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-primary, #2563EB);
+}
+
+/* ==========================================================================
+   MODULE 4 & 5: NHIỆM VỤ & PHÂN CÔNG (TASKS)
+   ========================================================================== */
+.tasks-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-subtle, #F9FAFB);
+  padding: 0.25rem;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid var(--border-color, #E5E7EB);
+}
+
+.filter-tab-btn {
+  padding: 0.4rem 0.875rem;
+  border-radius: var(--radius-xs, 4px);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 500;
+  color: var(--text-muted, #6B7280);
+  transition: all var(--transition-fast);
+}
+
+.filter-tab-btn.active {
+  background-color: #FFFFFF;
+  color: var(--color-primary, #2563EB);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+.priority-badge {
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-xs, 4px);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.priority-cao { background: #FEE2E2; color: #DC2626; }
+.priority-trungbinh { background: #FEF3C7; color: #D97706; }
+.priority-khan-cap { background: #7F1D1D; color: #FFFFFF; }
+
+/* ==========================================================================
+   MODULE 6: KHUNG CHAT NHÓM (CHAT INTERACTION)
+   ========================================================================== */
+.chat-wrapper {
+  background: var(--bg-card, #FFFFFF);
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-md, 12px);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  height: var(--chat-box-height, 520px);
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color, #E5E7EB);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1.25rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: var(--bg-app, #F3F4F6);
+}
+
+.message-item {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 80%;
+}
+
+.message-item.sent {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.msg-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.msg-bubble {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: 12px 12px 12px 2px;
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-sm);
+  color: var(--text-main, #1F2937);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.message-item.sent .msg-bubble {
+  background-color: var(--color-primary, #2563EB);
+  color: #FFFFFF;
+  border-color: var(--color-primary, #2563EB);
+  border-radius: 12px 12px 2px 12px;
+}
+
+.msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--text-muted, #6B7280);
+  margin-bottom: 0.25rem;
+}
+
+.message-item.sent .msg-meta {
+  justify-content: flex-end;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chat-attachment-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-subtle, #F9FAFB);
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-sm, 8px);
+  padding: 0.4rem 0.75rem;
+  margin-top: 0.5rem;
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--color-primary, #2563EB);
+}
+
+.message-item.sent .chat-attachment-chip {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+}
+
+.chat-input-bar {
+  padding: 0.875rem 1.25rem;
+  border-top: 1px solid var(--border-color, #E5E7EB);
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.chat-input {
+  flex: 1;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-full);
+  background-color: var(--bg-subtle, #F9FAFB);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+.chat-input:focus {
+  background-color: #FFFFFF;
+  border-color: var(--border-focus, #3B82F6);
+  outline: none;
+}
+
+/* ==========================================================================
+   MODULE 7 & 8: NỘP BÀI & TIMELINE LỊCH SỬ CHỈNH SỬA
+   ========================================================================== */
+.dropzone-area {
+  min-height: var(--dropzone-min-height, 140px);
+  border: 2px dashed var(--color-primary-border, #BFDBFE);
+  background-color: var(--color-primary-light, #EFF6FF);
+  border-radius: var(--radius-md, 12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dropzone-area:hover, .dropzone-area.dragover {
+  border-color: var(--color-primary, #2563EB);
+  background-color: #DBEAFE;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin-top: 1.5rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 9px;
+  width: var(--timeline-line-width, 2px);
+  background-color: var(--border-color, #E5E7EB);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.timeline-node {
+  position: absolute;
+  left: -2rem;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--color-primary, #2563EB);
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 0 0 2px var(--color-primary-border, #BFDBFE);
+}
+
+.timeline-card {
+  background: var(--bg-card, #FFFFFF);
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-sm, 8px);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ==========================================================================
+   MODULE PHỤ TRỢ: TIẾN ĐỘ ĐÓNG GÓP THÀNH VIÊN (MEMBER CONTRIBUTIONS)
+   ========================================================================== */
+.contribution-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: 0.75rem;
+}
+
+.contribution-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.contrib-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.contrib-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contrib-name-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* CHAT TYPING INDICATOR */
+.chat-typing-box {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--text-muted, #6B7280);
+  padding: 0.25rem 0.5rem;
+  font-style: italic;
+}
+
+.typing-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--text-muted, #6B7280);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* TÌM KIẾM THÀNH VIÊN VÀ NHIỆM VỤ */
+.module-search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+}
+
+.module-search-icon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-subtle, #9CA3AF);
+  pointer-events: none;
+}
+
+.module-search-input {
+  width: 100%;
+  min-height: var(--btn-height, 44px);
+  padding: 0.5rem 1rem 0.5rem 2.4rem;
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-sm, 8px);
+  background-color: #FFFFFF;
+  font-size: var(--font-size-sm, 0.875rem);
+}
+.module-search-input:focus {
+  border-color: var(--border-focus, #3B82F6);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* USER SWITCHER QUICK GRID */
+.user-switch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.user-switch-card {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-sm, 8px);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  background: var(--bg-subtle, #F9FAFB);
+  transition: all var(--transition-fast);
+}
+
+.user-switch-card:hover, .user-switch-card.active {
+  background: var(--color-primary-light, #EFF6FF);
+  border-color: var(--color-primary, #2563EB);
+}
+
+.form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Quick Demo Pills */
+.auth-quick-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.auth-quick-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  background-color: var(--bg-card, #FFFFFF);
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 500;
+  color: var(--text-main, #1F2937);
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.auth-quick-pill:hover {
+  background-color: var(--color-primary-light, #EFF6FF);
+  border-color: var(--color-primary, #2563EB);
+  color: var(--color-primary, #2563EB);
+  transform: translateY(-1px);
+}
+
+.auth-quick-pill img {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.auth-helper-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm, 0.875rem);
+  margin-top: 0.5rem;
+}
+
+/* NÚT CHỈNH SỬA TASK (EDIT TASK BUTTON) */
+.btn-edit-task {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.btn-edit-task:hover {
+  border-color: var(--color-primary, #2563EB);
+  color: var(--color-primary, #2563EB);
+  background-color: var(--color-primary-light, #EFF6FF);
+}
+
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVE FOR MODULES (@media max-width: 768px)
+   Bắt buộc theo yêu cầu hệ thống
+   ========================================================================== */
+@media (max-width: 768px) {
+  :root {
+    --chat-box-height: 480px;
+  }
+
+  /* 1. Dashboard Stats thu gọn về 2 cột trên tablet/mobile lớn, 1 cột trên mobile nhỏ */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  /* 2. Candidate Cards thu gọn về 1 cột duy nhất */
+  .candidates-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* 3. Members Grid về 1 cột */
+  .members-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* 4. Chat Module trên điện thoại */
+  .chat-wrapper {
+    height: 70vh; /* Tự co giãn theo màn hình điện thoại */
+  }
+
+  .message-item {
+    max-width: 90%;
+  }
+
+  /* 5. Toolbar và Tabs cuộn ngang */
+  .tasks-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 0.25rem;
+  }
+
+  /* 6. Timeline thụt lề nhỏ lại */
+  .timeline {
+    padding-left: 1.5rem;
+  }
+
+  .timeline-node {
+    left: -1.5rem;
+    width: 16px;
+    height: 16px;
+  }
+
+  /* 7. User Switcher thu về 1 cột */
+  .user-switch-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .module-search-wrapper {
+    width: 100%;
+  }
+
+  /* 8. Form modal 2 cột tự chuyển thành 1 cột trên điện thoại */
+  .form-row-2col {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 9. Nút thao tác bảng nhiệm vụ trên mobile */
+  .btn-edit-task, .btn-view-task {
+    min-height: 36px;
+    padding: 0.4rem 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   PRINT MEDIA STYLES (CHO XUẤT BÁO CÁO TIẾN ĐỘ PDF)
+   ========================================================================== */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+
+  .app-sidebar, .app-header, .btn, .tasks-toolbar, .chat-input-bar, .modal-overlay, .toast-container, .dropzone-area {
+    display: none !important;
+  }
+
+  .app-main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .content-container {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .tab-panel {
+    display: block !important;
+  }
+
+  .card {
+    border: 1px solid #CCCCCC !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+
+  .app-table th {
+    background-color: #EEEEEE !important;
+    color: #000000 !important;
+  }
+}
+
