@@ -791,6 +791,9 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnEditTaskFromDetail" style="margin-right: auto;">
+          ✏️ Sửa Nhiệm Vụ
+        </button>
         <button type="button" class="btn btn-secondary" id="btnUnclaimTask"
           style="display: none; color: var(--status-danger);">
           Hủy Nhận Nhiệm Vụ
@@ -945,6 +948,85 @@
           </button>
           <button type="button" class="btn btn-secondary" id="btnCancelEditMember">Hủy</button>
           <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 7: CHỈNH SỬA NHIỆM VỤ (EDIT TASK)
+       ====================================================================== -->
+  <div class="modal-overlay" id="editTaskModal">
+    <div class="modal-content" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="editTaskModalTitle">✏️ Chỉnh Sửa Nhiệm Vụ</h3>
+        <button class="modal-close-btn" id="btnCloseEditTask">&times;</button>
+      </div>
+      <form id="editTaskForm">
+        <input type="hidden" id="editTaskId">
+        <div class="modal-body">
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label class="form-label">Mã nhiệm vụ:</label>
+              <input type="text" id="editTaskCode" class="form-control" readonly
+                style="background-color: var(--bg-subtle); color: var(--color-primary); font-weight: 700; cursor: not-allowed;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tên nhiệm vụ (*):</label>
+              <input type="text" id="editTaskTitle" class="form-control"
+                placeholder="Nhập tiêu đề nhiệm vụ..." required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mô tả công việc (*):</label>
+            <textarea id="editTaskDesc" class="form-control" rows="3"
+              placeholder="Chi tiết yêu cầu công việc..." required></textarea>
+          </div>
+
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label class="form-label">Hạn chót hoàn thành (*):</label>
+              <input type="date" id="editTaskDeadline" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Độ ưu tiên:</label>
+              <select id="editTaskPriority" class="form-select">
+                <option value="Cao">Cao</option>
+                <option value="Trung bình">Trung bình</option>
+                <option value="Khẩn cấp">Khẩn cấp</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label class="form-label">Trạng thái:</label>
+              <select id="editTaskStatus" class="form-select">
+                <option value="todo">Chưa nhận (Chưa làm)</option>
+                <option value="in_progress">Đang làm</option>
+                <option value="done">Đã hoàn thành</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Người phụ trách:</label>
+              <select id="editTaskAssignee" class="form-select"></select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ghi chú bổ sung:</label>
+            <input type="text" id="editTaskNote" class="form-control"
+              placeholder="Ghi chú đính kèm, hướng dẫn...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btnDeleteTaskFromModal"
+            style="color: var(--status-danger); margin-right: auto;">
+            🗑️ Xóa Nhiệm Vụ
+          </button>
+          <button type="button" class="btn btn-secondary" id="btnCancelEditTask">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveEditTask">Lưu Thay Đổi</button>
         </div>
       </form>
     </div>

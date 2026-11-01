@@ -887,10 +887,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           </td>
           <td>
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: nowrap;">
               ${statusBadge}
-              <button class="btn btn-secondary btn-sm btn-view-task" data-task-id="${task.id}">
+              <button class="btn btn-secondary btn-sm btn-view-task" data-task-id="${task.id}" title="Xem chi tiết">
                 Chi tiết
+              </button>
+              <button class="btn btn-secondary btn-sm btn-edit-task" data-task-id="${task.id}" title="Chỉnh sửa nhiệm vụ">
+                ✏️ Sửa
               </button>
             </div>
           </td>
@@ -905,12 +908,23 @@ document.addEventListener("DOMContentLoaded", () => {
         openTaskDetailModal(taskId);
       };
     });
+
+    // Sự kiện mở modal chỉnh sửa nhiệm vụ
+    tableBody.querySelectorAll(".btn-edit-task").forEach(btn => {
+      btn.onclick = () => {
+        const taskId = btn.getAttribute("data-task-id");
+        openEditTaskModal(taskId);
+      };
+    });
   }
+
+  let currentDetailTaskId = null;
 
   function openTaskDetailModal(taskId) {
     const task = appState.tasks.find(t => t.id === taskId);
     if (!task) return;
 
+    currentDetailTaskId = taskId;
     const modal = document.getElementById("taskDetailModal");
     document.getElementById("detailTaskTitle").textContent = `${task.code}: ${task.title}`;
     document.getElementById("detailTaskDesc").textContent = task.description;
@@ -1675,6 +1689,154 @@ document.addEventListener("DOMContentLoaded", () => {
         showToast(`Đã xóa thành viên "${member.name}" khỏi nhóm.`, "warning");
       };
     }
+
+    // 7. Modal Chỉnh Sửa Nhiệm Vụ (Edit Task)
+    const editTaskModal = document.getElementById("editTaskModal");
+    const closeEditTaskBtn = document.getElementById("btnCloseEditTask");
+    const cancelEditTaskBtn = document.getElementById("btnCancelEditTask");
+    const editTaskForm = document.getElementById("editTaskForm");
+    const btnDeleteTaskFromModal = document.getElementById("btnDeleteTaskFromModal");
+    const btnEditTaskFromDetail = document.getElementById("btnEditTaskFromDetail");
+
+    if (closeEditTaskBtn) closeEditTaskBtn.onclick = () => editTaskModal.classList.remove("active");
+    if (cancelEditTaskBtn) cancelEditTaskBtn.onclick = () => editTaskModal.classList.remove("active");
+
+    if (btnEditTaskFromDetail) {
+      btnEditTaskFromDetail.onclick = () => {
+        const detailModal = document.getElementById("taskDetailModal");
+        if (detailModal) detailModal.classList.remove("active");
+        if (currentDetailTaskId) {
+          openEditTaskModal(currentDetailTaskId);
+        }
+      };
+    }
+
+    if (editTaskForm) {
+      editTaskForm.onsubmit = (e) => {
+        e.preventDefault();
+        if (isGuest()) {
+          showToast("Vui lòng đăng nhập để lưu thay đổi!", "warning");
+          openAuthModal("login");
+          return;
+        }
+
+        const tId = document.getElementById("editTaskId").value;
+        const title = document.getElementById("editTaskTitle").value.trim();
+        const desc = document.getElementById("editTaskDesc").value.trim();
+        const deadline = document.getElementById("editTaskDeadline").value;
+        const priority = document.getElementById("editTaskPriority").value;
+        const status = document.getElementById("editTaskStatus").value;
+        const assigneeId = document.getElementById("editTaskAssignee").value;
+        const note = document.getElementById("editTaskNote").value.trim();
+
+        if (!title || !desc || !deadline) {
+          showToast("Vui lòng điền đầy đủ Tiêu đề, Mô tả và Hạn chót!", "warning");
+          return;
+        }
+
+        const task = appState.tasks.find(t => t.id === tId);
+        if (!task) return;
+
+        task.title = title;
+        task.description = desc;
+        task.deadline = deadline;
+        task.priority = priority;
+        task.status = status;
+        task.note = note || "";
+
+        // Cập nhật người phụ trách
+        if (assigneeId) {
+          const member = appState.members.find(m => m.id === assigneeId);
+          if (member) {
+            task.assigneeId = member.id;
+            task.assigneeName = member.name;
+            task.assigneeAvatar = member.avatar;
+            if (task.status === "todo") {
+              task.status = "in_progress";
+            }
+          }
+        } else {
+          task.assigneeId = null;
+          task.assigneeName = "Chưa nhận";
+          task.assigneeAvatar = "";
+          if (task.status !== "done") {
+            task.status = "todo";
+          }
+        }
+
+        saveState();
+        renderAllModules();
+        editTaskModal.classList.remove("active");
+        showToast(`Đã cập nhật nhiệm vụ ${task.code}: "${title}" thành công!`, "success");
+      };
+    }
+
+    if (btnDeleteTaskFromModal) {
+      btnDeleteTaskFromModal.onclick = () => {
+        if (isGuest()) {
+          showToast("Vui lòng đăng nhập để thực hiện!", "warning");
+          openAuthModal("login");
+          return;
+        }
+
+        const tId = document.getElementById("editTaskId").value;
+        const task = appState.tasks.find(t => t.id === tId);
+        if (!task) return;
+
+        // Xóa task khỏi danh sách
+        appState.tasks = appState.tasks.filter(t => t.id !== tId);
+
+        saveState();
+        renderAllModules();
+        editTaskModal.classList.remove("active");
+        showToast(`Đã xóa nhiệm vụ ${task.code}: "${task.title}" khỏi danh sách.`, "warning");
+      };
+    }
+  }
+
+  function openEditTaskModal(taskId) {
+    if (isGuest()) {
+      showToast("Vui lòng đăng nhập tài khoản để chỉnh sửa nhiệm vụ!", "warning");
+      openAuthModal("login");
+      return;
+    }
+
+    const task = appState.tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    const modal = document.getElementById("editTaskModal");
+    const idInput = document.getElementById("editTaskId");
+    const codeInput = document.getElementById("editTaskCode");
+    const titleInput = document.getElementById("editTaskTitle");
+    const descInput = document.getElementById("editTaskDesc");
+    const deadlineInput = document.getElementById("editTaskDeadline");
+    const prioritySelect = document.getElementById("editTaskPriority");
+    const statusSelect = document.getElementById("editTaskStatus");
+    const assigneeSelect = document.getElementById("editTaskAssignee");
+    const noteInput = document.getElementById("editTaskNote");
+
+    if (idInput) idInput.value = task.id;
+    if (codeInput) codeInput.value = task.code;
+    if (titleInput) titleInput.value = task.title;
+    if (descInput) descInput.value = task.description;
+    if (deadlineInput) deadlineInput.value = task.deadline;
+    if (prioritySelect) prioritySelect.value = task.priority;
+    if (statusSelect) statusSelect.value = task.status;
+    if (noteInput) noteInput.value = task.note || "";
+
+    // Nạp danh sách thành viên vào dropdown người phụ trách
+    if (assigneeSelect) {
+      assigneeSelect.innerHTML = `
+        <option value="">-- Chưa phân công (Chưa nhận) --</option>
+        ${appState.members.map(m => `
+          <option value="${m.id}" ${task.assigneeId === m.id ? 'selected' : ''}>
+            ${escapeHTML(m.name)} (${escapeHTML(m.role)})
+          </option>
+        `).join("")}
+      `;
+    }
+
+    modal.classList.add("active");
   }
 
   function openEditMemberModal(memberId) {

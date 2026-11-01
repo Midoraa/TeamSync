@@ -687,6 +687,21 @@
   margin-top: 0.5rem;
 }
 
+/* NÚT CHỈNH SỬA TASK (EDIT TASK BUTTON) */
+.btn-edit-task {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 500;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.btn-edit-task:hover {
+  border-color: var(--color-primary, #2563EB);
+  color: var(--color-primary, #2563EB);
+  background-color: var(--color-primary-light, #EFF6FF);
+}
+
 /* ==========================================================================
    MOBILE & TABLET RESPONSIVE FOR MODULES (@media max-width: 768px)
    Bắt buộc theo yêu cầu hệ thống
@@ -761,6 +776,12 @@
   /* 8. Form modal 2 cột tự chuyển thành 1 cột trên điện thoại */
   .form-row-2col {
     grid-template-columns: 1fr !important;
+  }
+
+  /* 9. Nút thao tác bảng nhiệm vụ trên mobile */
+  .btn-edit-task, .btn-view-task {
+    min-height: 36px;
+    padding: 0.4rem 0.65rem;
   }
 }
 
