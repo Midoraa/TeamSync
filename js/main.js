@@ -1156,7 +1156,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderTimeline() {
       if (!timelineContainer) return;
 
-      timelineContainer.innerHTML = appState.submissions.map(sub => `
+      const isLeader = appState.currentUser && appState.currentUser.role === "Nhóm trưởng";
+
+      timelineContainer.innerHTML = appState.submissions.map((sub, idx) => `
         <div class="timeline-item">
           <div class="timeline-node"></div>
           <div class="timeline-card">
@@ -1177,20 +1179,114 @@ document.addEventListener("DOMContentLoaded", () => {
               <span class="badge badge-success">Điểm: ${sub.score}</span>
             </div>
 
-            ${sub.feedback ? `
+            ${sub.leaderFeedback ? `
               <div style="margin-top: 0.5rem; font-size: 0.8rem; background: var(--status-success-bg); border: 1px solid var(--status-success-border); padding: 0.5rem; border-radius: 6px; color: #065F46;">
-                💬 <strong>Nhận xét từ Giảng viên:</strong> ${escapeHTML(sub.feedback)}
+                💬 <strong>Nhận xét từ Nhóm trưởng:</strong> ${escapeHTML(sub.leaderFeedback)}
+              </div>
+            ` : (sub.feedback ? `
+              <div style="margin-top: 0.5rem; font-size: 0.8rem; background: var(--status-success-bg); border: 1px solid var(--status-success-border); padding: 0.5rem; border-radius: 6px; color: #065F46;">
+                💬 <strong>Nhận xét từ Nhóm trưởng:</strong> ${escapeHTML(sub.feedback)}
+              </div>
+            ` : '')}
+
+            ${isLeader ? `
+              <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-color);">
+                <div style="font-size: 0.78rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.45rem;">✏️ Nhận xét của Nhóm trưởng:</div>
+                <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                  <textarea
+                    class="form-control"
+                    id="feedbackInput_${idx}"
+                    rows="2"
+                    placeholder="Nhập nhận xét cho phiên bản ${sub.version}..."
+                    style="font-size: 0.82rem; resize: vertical;"
+                  >${escapeHTML(sub.leaderFeedback || sub.feedback || '')}</textarea>
+                  <button type="button" class="btn btn-primary" data-sub-idx="${idx}" id="btnSaveFeedback_${idx}"
+                    style="white-space: nowrap; font-size: 0.8rem; padding: 0.5rem 0.85rem;">
+                    💾 Lưu
+                  </button>
+                </div>
+                <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.45rem; flex-wrap: wrap;">
+                  <label style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">Điểm đánh giá:</label>
+                  <input type="text" id="scoreInput_${idx}" class="form-control"
+                    value="${escapeHTML(sub.score || '')}"
+                    placeholder="VD: 9.5/10 hoặc Đạt"
+                    style="width: 140px; font-size: 0.82rem; padding: 0.35rem 0.6rem;">
+                </div>
               </div>
             ` : ''}
           </div>
         </div>
       `).join("");
+
+      // Gắn sự kiện Lưu nhận xét cho Nhóm trưởng
+      if (isLeader) {
+        appState.submissions.forEach((sub, idx) => {
+          const saveBtn = document.getElementById(`btnSaveFeedback_${idx}`);
+          if (saveBtn) {
+            saveBtn.addEventListener("click", () => {
+              const feedbackInput = document.getElementById(`feedbackInput_${idx}`);
+              const scoreInput = document.getElementById(`scoreInput_${idx}`);
+              const feedbackText = feedbackInput ? feedbackInput.value.trim() : "";
+              const scoreText = scoreInput ? scoreInput.value.trim() : "";
+
+              if (!feedbackText) {
+                showToast("Vui lòng nhập nội dung nhận xét trước khi lưu!", "warning");
+                return;
+              }
+
+              appState.submissions[idx].leaderFeedback = feedbackText;
+              if (scoreText) appState.submissions[idx].score = scoreText;
+              saveState();
+              renderTimeline();
+              showToast(`Đã lưu nhận xét cho phiên bản ${sub.version} thành công! ✅`, "success");
+            });
+          }
+        });
+      }
     }
 
     renderTimeline();
 
-    // Sự kiện kéo thả file
-    if (dropzone && fileInput) {
+    // ==========================================================================
+    // Khu vực nộp bài - Nhóm trưởng: hiển thị bảng nhận xét | Thành viên: form nộp bài
+    // ==========================================================================
+    const isLeader = appState.currentUser && appState.currentUser.role === "Nhóm trưởng";
+
+    const submissionCardHeader = document.querySelector("#tab-submissions .card .card-header");
+    const submissionFormWrapper = document.getElementById("submissionForm")?.parentElement;
+
+    if (isLeader && submissionFormWrapper) {
+      // Ẩn form nộp bài, hiển thị bảng tổng hợp nhận xét nhanh cho Nhóm trưởng
+      const submissionCard = submissionFormWrapper;
+      submissionCard.innerHTML = `
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">👑 Nhận Xét Bài Nộp của Thành Viên</h3>
+            <div class="card-desc">Với vai trò Nhóm trưởng, bạn có thể chấm điểm và ghi nhận xét cho từng bài nộp trong Timeline bên dưới</div>
+          </div>
+        </div>
+        <div style="background: var(--color-primary-light); border: 1px solid var(--color-primary-border); border-radius: 10px; padding: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 220px;">
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.25rem;">Tổng bài đã nộp</div>
+            <div style="font-size: 1.75rem; font-weight: 800; color: #1E293B;">${appState.submissions.length}</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">phiên bản • v1.0 đến v${appState.submissions[0]?.version || 'v1.3'}</div>
+          </div>
+          <div style="flex: 1; min-width: 220px;">
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.25rem;">Đã nhận xét</div>
+            <div style="font-size: 1.75rem; font-weight: 800; color: #1E293B;">${appState.submissions.filter(s => s.leaderFeedback || s.feedback).length}</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">trong ${appState.submissions.length} bài nộp</div>
+          </div>
+          <div style="flex: 1; min-width: 220px; display: flex; align-items: center;">
+            <div style="font-size: 0.82rem; color: #1D4ED8;">
+              ⬇️ Cuộn xuống để ghi nhận xét và điểm đánh giá cho từng phiên bản trong Timeline.
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Sự kiện kéo thả file (chỉ dành cho thành viên không phải Nhóm trưởng)
+    if (!isLeader && dropzone && fileInput) {
       dropzone.onclick = () => fileInput.click();
       dropzone.ondragover = (e) => {
         e.preventDefault();
@@ -1221,7 +1317,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    if (submitForm) {
+    if (!isLeader && submitForm) {
       submitForm.onsubmit = (e) => {
         e.preventDefault();
         if (isGuest()) {
