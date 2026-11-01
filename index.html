@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Hệ Thống Quản Lý & Làm Bài Tập Nhóm Trực Tuyến | Nhóm 05</title>
-  <meta name="description" content="Nền tảng hỗ trợ sinh viên làm bài tập nhóm hiệu quả, phân công nhiệm vụ, bầu chọn nhóm trưởng, chat trực tuyến và theo dõi tiến độ nộp bài.">
-  
+  <meta name="description"
+    content="Nền tảng hỗ trợ sinh viên làm bài tập nhóm hiệu quả, phân công nhiệm vụ, bầu chọn nhóm trưởng, chat trực tuyến và theo dõi tiến độ nộp bài.">
+
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+
   <!-- Favicon biểu tượng thương hiệu -->
   <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg">
-  
+
   <!-- Đường dẫn tương đối (Relative Paths) hỗ trợ GitHub Pages -->
   <link rel="stylesheet" href="./css/variables.css">
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/modules.css">
 </head>
+
 <body>
 
   <!-- Lớp phủ mờ (Backdrop) khi mở Drawer trên Mobile -->
@@ -56,7 +59,7 @@
       <!-- Navigation Menu -->
       <nav class="sidebar-nav">
         <div class="nav-section-title">Điều hướng chính</div>
-        
+
         <a href="#dashboard" class="nav-item active" data-tab="dashboard">
           <span class="nav-icon">📊</span>
           <span>Tổng quan & Tiến độ</span>
@@ -95,7 +98,8 @@
       <!-- Sidebar User Profile Footer -->
       <div class="sidebar-footer">
         <div class="user-avatar-wrapper">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="user-avatar">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+            alt="Avatar" class="user-avatar">
           <div class="status-dot"></div>
         </div>
         <div class="sidebar-user-info">
@@ -112,7 +116,7 @@
          MAIN CONTENT AREA
          ====================================================================== -->
     <main class="app-main">
-      
+
       <!-- HEADER PHÍA TRÊN -->
       <header class="app-header">
         <div class="header-left">
@@ -120,7 +124,7 @@
           <button class="btn-hamburger" id="btnHamburger" aria-label="Mở Menu điều hướng">
             ☰
           </button>
-          
+
           <div class="page-title-box">
             <h1 class="page-title" id="pageTitle">Tổng quan & Tiến độ</h1>
             <div class="page-breadcrumb" id="pageBreadcrumb">Trang chủ / Bảng điều khiển</div>
@@ -136,13 +140,15 @@
 
           <!-- Thông báo & Quick Actions -->
           <div class="header-actions">
-            <button class="btn-icon" title="Thông báo mới" onclick="showToast('Bạn không có thông báo chưa đọc nào.', 'warning')">
+            <button class="btn-icon" title="Thông báo mới"
+              onclick="showToast('Bạn không có thông báo chưa đọc nào.', 'warning')">
               🔔
               <span class="notification-badge"></span>
             </button>
-            
+
             <button class="header-profile-btn" onclick="document.getElementById('btnOpenAuth').click()">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Profile" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+                alt="Profile" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
               <span class="header-profile-name" id="headerUserName">Hải Đăng</span>
             </button>
           </div>
@@ -156,22 +162,27 @@
              TAB 1: TỔNG QUAN & TIẾN ĐỘ (MODULE 9 & OVERVIEW)
              ================================================================== -->
         <div class="tab-panel active" id="tab-dashboard">
-          
+
           <!-- Banner Chào mừng & Thông tin Đề tài -->
-          <div class="card" style="background: linear-gradient(135deg, #1E61F0, #2563EB); color: #FFFFFF; border: none;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+          <div class="card"
+            style="background: linear-gradient(135deg, #1E61F0, #2563EB); color: #FFFFFF; border: none;">
+            <div
+              style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
               <div>
-                <span class="badge" style="background: rgba(255,255,255,0.2); color: #FFFFFF; border: none; margin-bottom: 0.5rem;">
+                <span class="badge"
+                  style="background: rgba(255,255,255,0.2); color: #FFFFFF; border: none; margin-bottom: 0.5rem;">
                   Đề Tài Nhóm Môn Học IT4409
                 </span>
                 <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem;">
-                  Nền tảng số hóa quản lý và cộng tác làm bài tập nhóm
+                  TeamSync Kết nối nhịp nhàng - Hợp tác công bằng - Tiến độ vượt trội
                 </h2>
                 <p style="font-size: 0.875rem; opacity: 0.9; max-width: 720px;">
-                  Giảng viên hướng dẫn: <strong>TS. Trần Văn Nam</strong> • Hạn nộp báo cáo cuối kỳ: <strong>18/11/2026</strong>
+                  Giảng viên hướng dẫn: <strong>TS. Trần Văn Nam</strong> • Hạn nộp báo cáo cuối kỳ:
+                  <strong>18/11/2026</strong>
                 </p>
               </div>
-              <button class="btn" style="background: #FFFFFF; color: var(--color-primary); font-weight: 600;" onclick="document.querySelector('[data-tab=\'tasks\']').click()">
+              <button class="btn" style="background: #FFFFFF; color: var(--color-primary); font-weight: 600;"
+                onclick="document.querySelector('[data-tab=\'tasks\']').click()">
                 🚀 Xem Bảng Nhiệm Vụ
               </button>
             </div>
@@ -225,14 +236,15 @@
               </div>
               <span class="badge badge-primary" id="statPercentText">25% Hoàn thành</span>
             </div>
-            
+
             <div class="progress-container">
               <div class="progress-track" style="height: 12px;">
                 <div class="progress-fill" id="statProgressFill" style="width: 25%;"></div>
               </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+            <div
+              style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
               <span>Giai đoạn 1: Khởi động (100%)</span>
               <span>Giai đoạn 2: Phát triển (40%)</span>
               <span>Giai đoạn 3: Báo cáo & Nộp (Chưa bắt đầu)</span>
@@ -254,7 +266,8 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">⚡ Hoạt Động Gần Đây Của Nhóm</h3>
-              <button class="btn btn-secondary btn-sm" onclick="showToast('Dữ liệu hoạt động đã được làm mới.', 'success')">
+              <button class="btn btn-secondary btn-sm"
+                onclick="showToast('Dữ liệu hoạt động đã được làm mới.', 'success')">
                 Làm mới
               </button>
             </div>
@@ -267,13 +280,14 @@
              TAB 2: THÀNH VIÊN & BẦU CHỌN NHÓM TRƯỞNG (MODULE 2 & 3)
              ================================================================== -->
         <div class="tab-panel" id="tab-members">
-          
+
           <!-- Thanh điều khiển Nhóm & Thêm thành viên -->
           <div class="card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">👥 Quản Lý Thành Viên Nhóm</h3>
-                <div class="card-desc">Mã nhóm: <strong id="memberGroupCodeDisplay">WEB2026-N05</strong> • <span id="memberCountDisplay">5</span> Thành viên chính thức</div>
+                <div class="card-desc">Mã nhóm: <strong id="memberGroupCodeDisplay">WEB2026-N05</strong> • <span
+                    id="memberCountDisplay">5</span> Thành viên chính thức</div>
               </div>
               <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 <button class="btn btn-secondary" id="btnOpenCreateGroup">
@@ -286,15 +300,20 @@
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
               <div class="module-search-wrapper">
                 <span class="module-search-icon">🔍</span>
-                <input type="text" id="searchMemberInput" class="module-search-input" placeholder="Tìm thành viên theo tên, email, MSSV hoặc kỹ năng...">
+                <input type="text" id="searchMemberInput" class="module-search-input"
+                  placeholder="Tìm thành viên theo tên, email, MSSV hoặc kỹ năng...">
               </div>
             </div>
 
             <!-- Form Thêm thành viên theo Họ tên, Email, MSSV -->
-            <form id="addMemberForm" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-              <input type="text" id="addMemberName" class="form-control" placeholder="Họ và tên sinh viên..." style="flex: 1; min-width: 160px;" required>
-              <input type="email" id="addMemberEmail" class="form-control" placeholder="Email sinh viên..." style="flex: 1.2; min-width: 200px;" required>
-              <input type="text" id="addMemberStudentId" class="form-control" placeholder="MSSV..." style="width: 130px;" required>
+            <form id="addMemberForm"
+              style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <input type="text" id="addMemberName" class="form-control" placeholder="Họ và tên sinh viên..."
+                style="flex: 1; min-width: 160px;" required>
+              <input type="email" id="addMemberEmail" class="form-control" placeholder="Email sinh viên..."
+                style="flex: 1.2; min-width: 200px;" required>
+              <input type="text" id="addMemberStudentId" class="form-control" placeholder="MSSV..."
+                style="width: 130px;" required>
               <button type="submit" class="btn btn-primary">
                 ➕ Thêm Thành Viên
               </button>
@@ -309,7 +328,8 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">🗳️ Bầu Chọn Nhóm Trưởng Dân Chủ</h3>
-                <div class="card-desc">Ứng viên có số phiếu bầu cao nhất sẽ tự động được cập nhật làm Nhóm Trưởng chính thức.</div>
+                <div class="card-desc">Ứng viên có số phiếu bầu cao nhất sẽ tự động được cập nhật làm Nhóm Trưởng chính
+                  thức.</div>
               </div>
               <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
                 <span class="badge badge-success">Đang mở bình chọn</span>
@@ -342,7 +362,8 @@
             <!-- Toolbar lọc trạng thái & Tìm kiếm -->
             <div class="tasks-toolbar">
               <div class="filter-tabs">
-                <button class="filter-tab-btn active" data-filter="all">Tất cả (<span id="taskCountAll">8</span>)</button>
+                <button class="filter-tab-btn active" data-filter="all">Tất cả (<span
+                    id="taskCountAll">8</span>)</button>
                 <button class="filter-tab-btn" data-filter="todo">Chưa nhận</button>
                 <button class="filter-tab-btn" data-filter="in_progress">Đang làm</button>
                 <button class="filter-tab-btn" data-filter="done">Hoàn thành</button>
@@ -350,7 +371,8 @@
 
               <div class="module-search-wrapper">
                 <span class="module-search-icon">🔍</span>
-                <input type="text" id="searchTaskInput" class="module-search-input" placeholder="Tìm theo mã hoặc tên công việc...">
+                <input type="text" id="searchTaskInput" class="module-search-input"
+                  placeholder="Tìm theo mã hoặc tên công việc...">
               </div>
             </div>
 
@@ -402,11 +424,16 @@
               </div>
 
               <!-- Gợi ý tin nhắn nhanh (Quick replies) -->
-              <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding: 0.5rem 1rem; background: var(--bg-subtle); border-top: 1px solid var(--border-color); white-space: nowrap;">
-                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn" data-msg="👋 Chào cả nhóm! Hôm nay tiến độ thế nào rồi mọi người?">👋 Chào nhóm</button>
-                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn" data-msg="👍 Mình đã nhận nhiệm vụ và đang code rồi nhé!">👍 Đang làm task</button>
-                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn" data-msg="⏰ Mọi người chú ý hạn nộp đồ án sắp đến rồi!">⏰ Nhắc deadline</button>
-                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn" data-msg="📦 Mình vừa nộp bản cập nhật mới, mọi người xem nhé!">📦 Đã nộp bài</button>
+              <div
+                style="display: flex; gap: 0.5rem; overflow-x: auto; padding: 0.5rem 1rem; background: var(--bg-subtle); border-top: 1px solid var(--border-color); white-space: nowrap;">
+                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn"
+                  data-msg="👋 Chào cả nhóm! Hôm nay tiến độ thế nào rồi mọi người?">👋 Chào nhóm</button>
+                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn"
+                  data-msg="👍 Mình đã nhận nhiệm vụ và đang code rồi nhé!">👍 Đang làm task</button>
+                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn"
+                  data-msg="⏰ Mọi người chú ý hạn nộp đồ án sắp đến rồi!">⏰ Nhắc deadline</button>
+                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn"
+                  data-msg="📦 Mình vừa nộp bản cập nhật mới, mọi người xem nhé!">📦 Đã nộp bài</button>
               </div>
 
               <!-- Thanh nhập tin nhắn -->
@@ -414,7 +441,8 @@
                 <button type="button" class="btn-icon" id="btnAttachFile" title="Đính kèm tệp (.pdf, .docx, .zip)">
                   📎
                 </button>
-                <input type="text" id="chatInput" class="chat-input" placeholder="Nhập tin nhắn trao đổi với nhóm (gõ Enter để gửi)..." autocomplete="off" required>
+                <input type="text" id="chatInput" class="chat-input"
+                  placeholder="Nhập tin nhắn trao đổi với nhóm (gõ Enter để gửi)..." autocomplete="off" required>
                 <button type="submit" class="btn btn-primary" style="padding: 0 1.25rem;">
                   Gửi 🚀
                 </button>
@@ -427,7 +455,7 @@
              TAB 5: NỘP BÀI & LỊCH SỬ CHỈNH SỬA (MODULE 7 & 8)
              ================================================================== -->
         <div class="tab-panel" id="tab-submissions">
-          
+
           <!-- Khu vực Nộp Bài Drag & Drop -->
           <div class="card">
             <div class="card-header">
@@ -448,7 +476,8 @@
               <div class="dropzone-area" id="submissionDropzone">
                 <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">📂</div>
                 <div id="dropzoneText" style="font-size: 0.95rem; color: var(--text-main);">
-                  Kéo thả file bài nộp vào đây hoặc <span style="color: var(--color-primary); font-weight: 600;">bấm để chọn tệp</span>
+                  Kéo thả file bài nộp vào đây hoặc <span style="color: var(--color-primary); font-weight: 600;">bấm để
+                    chọn tệp</span>
                 </div>
                 <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
                   Chấp nhận các định dạng: .zip, .rar, .pdf, .docx
@@ -458,7 +487,8 @@
 
               <div class="form-group" style="margin-top: 1.25rem;">
                 <label class="form-label">Ghi chú lần nộp này (Nội dung thay đổi):</label>
-                <textarea id="submissionNote" class="form-control" placeholder="Mô tả tóm tắt nội dung chỉnh sửa hoặc tính năng mới hoàn thiện trong lần nộp này..."></textarea>
+                <textarea id="submissionNote" class="form-control"
+                  placeholder="Mô tả tóm tắt nội dung chỉnh sửa hoặc tính năng mới hoàn thiện trong lần nộp này..."></textarea>
               </div>
 
               <div style="display: flex; justify-content: flex-end;">
@@ -504,7 +534,8 @@
             </div>
 
             <!-- Bộ lọc thành viên & trạng thái cho Báo cáo -->
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; background: var(--bg-subtle); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+            <div
+              style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; background: var(--bg-subtle); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
               <div style="flex: 1; min-width: 200px;">
                 <label class="form-label" style="font-size: 0.8rem;">Lọc theo thành viên:</label>
                 <select id="reportMemberFilter" class="form-select">
@@ -524,7 +555,8 @@
 
             <!-- Bảng Preview Tóm tắt Báo Cáo -->
             <div style="margin: 1rem 0;">
-              <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Bảng Xem Trước Báo Cáo (Preview)</h4>
+              <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Bảng Xem Trước Báo Cáo (Preview)
+              </h4>
               <div class="table-responsive">
                 <table class="app-table">
                   <thead>
@@ -562,7 +594,8 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Email sinh viên (*):</label>
-            <input type="email" id="authEmail" class="form-control" placeholder="haidang.nguyen@student.edu.vn" required>
+            <input type="email" id="authEmail" class="form-control" placeholder="haidang.nguyen@student.edu.vn"
+              required>
           </div>
           <div class="form-group" id="authNameGroup" style="display: none;">
             <label class="form-label">Họ và tên:</label>
@@ -614,7 +647,8 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Tên nhóm:</label>
-            <input type="text" id="newGroupName" class="form-control" value="Nhóm 05 - Phát Triển Web Hiện Đại" required>
+            <input type="text" id="newGroupName" class="form-control" value="Nhóm 05 - Phát Triển Web Hiện Đại"
+              required>
           </div>
           <div class="form-group">
             <label class="form-label">Mã nhóm:</label>
@@ -622,7 +656,8 @@
           </div>
           <div class="form-group">
             <label class="form-label">Đề tài đồ án:</label>
-            <textarea id="newGroupTopic" class="form-control" rows="3">Nền tảng số hóa quản lý và cộng tác làm bài tập nhóm cho sinh viên đại học</textarea>
+            <textarea id="newGroupTopic" class="form-control"
+              rows="3">Nền tảng số hóa quản lý và cộng tác làm bài tập nhóm cho sinh viên đại học</textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -643,7 +678,8 @@
       </div>
       <div class="modal-body">
         <p id="detailTaskDesc" style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 1.25rem;"></p>
-        <div style="background: var(--bg-subtle); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem;">
+        <div
+          style="background: var(--bg-subtle); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem;">
           <div>📅 Hạn nộp: <strong id="detailTaskDeadline"></strong></div>
           <div>⚡ Độ ưu tiên: <strong id="detailTaskPriority"></strong></div>
           <div>👤 Người phụ trách: <strong id="detailTaskAssignee"></strong></div>
@@ -651,7 +687,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="btnUnclaimTask" style="display: none; color: var(--status-danger);">
+        <button type="button" class="btn btn-secondary" id="btnUnclaimTask"
+          style="display: none; color: var(--status-danger);">
           Hủy Nhận Nhiệm Vụ
         </button>
         <button type="button" class="btn btn-primary" id="btnClaimTask">
@@ -677,11 +714,13 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Tên nhiệm vụ (*):</label>
-            <input type="text" id="newTaskTitle" class="form-control" placeholder="Ví dụ: Thiết kế giao diện Dashboard..." required>
+            <input type="text" id="newTaskTitle" class="form-control"
+              placeholder="Ví dụ: Thiết kế giao diện Dashboard..." required>
           </div>
           <div class="form-group">
             <label class="form-label">Mô tả công việc (*):</label>
-            <textarea id="newTaskDesc" class="form-control" rows="3" placeholder="Chi tiết yêu cầu công việc cần thực hiện..." required></textarea>
+            <textarea id="newTaskDesc" class="form-control" rows="3"
+              placeholder="Chi tiết yêu cầu công việc cần thực hiện..." required></textarea>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
@@ -718,11 +757,13 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Khẩu hiệu / Tuyên ngôn hành động (*):</label>
-            <textarea id="nominateSlogan" class="form-control" rows="2" placeholder="Cam kết của bạn nếu trở thành Nhóm trưởng..." required></textarea>
+            <textarea id="nominateSlogan" class="form-control" rows="2"
+              placeholder="Cam kết của bạn nếu trở thành Nhóm trưởng..." required></textarea>
           </div>
           <div class="form-group">
             <label class="form-label">Kinh nghiệm & Kỹ năng nổi bật:</label>
-            <textarea id="nominateExperience" class="form-control" rows="2" placeholder="Kinh nghiệm quản lý, điều phối hoặc kỹ năng chuyên môn..."></textarea>
+            <textarea id="nominateExperience" class="form-control" rows="2"
+              placeholder="Kinh nghiệm quản lý, điều phối hoặc kỹ năng chuyên môn..."></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -732,8 +773,82 @@
     </div>
   </div>
 
+  <!-- ======================================================================
+       MODAL 6: CHỈNH SỬA THÔNG TIN THÀNH VIÊN
+       ====================================================================== -->
+  <div class="modal-overlay" id="editMemberModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">✏️ Chỉnh Sửa Thông Tin Thành Viên</h3>
+        <button class="modal-close-btn" id="btnCloseEditMember">&times;</button>
+      </div>
+      <form id="editMemberForm">
+        <input type="hidden" id="editMemberId">
+        <div class="modal-body">
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; background: var(--bg-subtle); padding: 0.875rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <img id="editMemberAvatarPreview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" style="width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid #FFFFFF; box-shadow: var(--shadow-sm);">
+            <div style="flex: 1;">
+              <label class="form-label" style="font-size: 0.8rem; margin-bottom: 0.2rem;">URL Ảnh đại diện:</label>
+              <input type="url" id="editMemberAvatar" class="form-control" placeholder="https://images.unsplash.com/..." style="min-height: 38px; font-size: 0.8rem;">
+            </div>
+          </div>
+
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label class="form-label">Họ và tên (*):</label>
+              <input type="text" id="editMemberName" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mã số sinh viên (MSSV) (*):</label>
+              <input type="text" id="editMemberStudentId" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email sinh viên (*):</label>
+            <input type="email" id="editMemberEmail" class="form-control" required>
+          </div>
+
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label class="form-label">Vai trò trong nhóm:</label>
+              <select id="editMemberRole" class="form-select">
+                <option value="Nhóm trưởng">Nhóm trưởng</option>
+                <option value="Thành viên">Thành viên</option>
+                <option value="Thư ký / Phụ tá">Thư ký / Phụ tá</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Trạng thái:</label>
+              <select id="editMemberStatus" class="form-select">
+                <option value="online">● Online (Trực tuyến)</option>
+                <option value="offline">○ Offline (Ngoại tuyến)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Kỹ năng / Chuyên môn (cách nhau bằng dấu phẩy):</label>
+            <input type="text" id="editMemberSkills" class="form-control" placeholder="Ví dụ: Frontend, UI/UX, Quản lý nhóm...">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;">
+              Phân cách các kỹ năng bằng dấu phẩy để hệ thống tự động tạo thẻ tag.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btnDeleteMemberFromModal" style="color: var(--status-danger); margin-right: auto;">
+            🗑️ Xóa Thành Viên
+          </button>
+          <button type="button" class="btn btn-secondary" id="btnCancelEditMember">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Scripts dữ liệu mẫu và logic điều khiển -->
   <script src="./data/mockData.js"></script>
   <script src="./js/main.js"></script>
 </body>
+
 </html>

@@ -636,6 +636,12 @@
   border-color: var(--color-primary, #2563EB);
 }
 
+.form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
 /* ==========================================================================
    MOBILE & TABLET RESPONSIVE FOR MODULES (@media max-width: 768px)
    Bắt buộc theo yêu cầu hệ thống
@@ -705,6 +711,11 @@
 
   .module-search-wrapper {
     width: 100%;
+  }
+
+  /* 8. Form modal 2 cột tự chuyển thành 1 cột trên điện thoại */
+  .form-row-2col {
+    grid-template-columns: 1fr !important;
   }
 }
 

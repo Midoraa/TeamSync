@@ -450,9 +450,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 <span>Đã xong: <strong>${completedCount} việc</strong></span>
                 <span>Đang làm: <strong>${activeCount} việc</strong></span>
               </div>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
+                <button class="btn btn-secondary btn-sm btn-edit-member" data-member-id="${m.id}" style="flex: 1;">
+                  ✏️ Sửa thông tin
+                </button>
+              </div>
             </div>
           `;
         }).join("");
+
+        // Gán sự kiện mở modal sửa thông tin thành viên
+        membersListEl.querySelectorAll(".btn-edit-member").forEach(btn => {
+          btn.onclick = () => {
+            const mId = btn.getAttribute("data-member-id");
+            openEditMemberModal(mId);
+          };
+        });
       }
     }
 
@@ -1291,7 +1304,178 @@ document.addEventListener("DOMContentLoaded", () => {
     if (closeTaskDetailBtn && taskDetailModal) {
       closeTaskDetailBtn.onclick = () => taskDetailModal.classList.remove("active");
     }
+
+    // 6. Modal Chỉnh Sửa Thông Tin Thành Viên
+    const editMemberModal = document.getElementById("editMemberModal");
+    const closeEditMemberBtn = document.getElementById("btnCloseEditMember");
+    const cancelEditMemberBtn = document.getElementById("btnCancelEditMember");
+    const editMemberForm = document.getElementById("editMemberForm");
+    const editMemberAvatarInput = document.getElementById("editMemberAvatar");
+    const editMemberAvatarPreview = document.getElementById("editMemberAvatarPreview");
+    const btnDeleteMemberFromModal = document.getElementById("btnDeleteMemberFromModal");
+
+    if (closeEditMemberBtn) closeEditMemberBtn.onclick = () => editMemberModal.classList.remove("active");
+    if (cancelEditMemberBtn) cancelEditMemberBtn.onclick = () => editMemberModal.classList.remove("active");
+
+    if (editMemberAvatarInput && editMemberAvatarPreview) {
+      editMemberAvatarInput.oninput = (e) => {
+        const val = e.target.value.trim();
+        if (val) {
+          editMemberAvatarPreview.src = val;
+        }
+      };
+    }
+
+    if (editMemberForm) {
+      editMemberForm.onsubmit = (e) => {
+        e.preventDefault();
+        const mId = document.getElementById("editMemberId").value;
+        const name = document.getElementById("editMemberName").value.trim();
+        const stuId = document.getElementById("editMemberStudentId").value.trim();
+        const email = document.getElementById("editMemberEmail").value.trim();
+        const role = document.getElementById("editMemberRole").value;
+        const status = document.getElementById("editMemberStatus").value;
+        const skillsRaw = document.getElementById("editMemberSkills").value.trim();
+        const avatar = document.getElementById("editMemberAvatar").value.trim();
+
+        if (!name || !email || !stuId) {
+          showToast("Vui lòng điền đầy đủ Họ tên, MSSV và Email!", "warning");
+          return;
+        }
+
+        const member = appState.members.find(m => m.id === mId);
+        if (!member) return;
+
+        // Parse skills
+        const skills = skillsRaw ? skillsRaw.split(",").map(s => s.trim()).filter(Boolean) : member.skills;
+
+        member.name = name;
+        member.studentId = stuId;
+        member.email = email;
+        member.role = role;
+        member.status = status;
+        member.skills = skills.length ? skills : ["Chuyên môn"];
+        if (avatar) member.avatar = avatar;
+
+        // Nếu thành viên được chỉnh sửa là người dùng đang đăng nhập
+        if (appState.currentUser && appState.currentUser.id === mId) {
+          appState.currentUser.name = name;
+          appState.currentUser.studentId = stuId;
+          appState.currentUser.email = email;
+          appState.currentUser.role = role;
+          if (avatar) appState.currentUser.avatar = avatar;
+          renderUserUI();
+        }
+
+        // Cập nhật tên và avatar trong các nhiệm vụ đã giao cho thành viên này
+        appState.tasks.forEach(t => {
+          if (t.assigneeId === mId) {
+            t.assigneeName = name;
+            if (avatar) t.assigneeAvatar = avatar;
+          }
+        });
+
+        // Cập nhật tên ứng viên nếu người này đang tham gia bầu cử
+        const candidate = appState.election.candidates.find(c => c.memberId === mId);
+        if (candidate) {
+          candidate.name = name;
+        }
+
+        // Nếu đổi vai trò thành "Nhóm trưởng"
+        if (role === "Nhóm trưởng") {
+          appState.currentGroup.leaderId = mId;
+        }
+
+        saveState();
+        renderAllModules();
+        editMemberModal.classList.remove("active");
+        showToast(`Đã cập nhật thông tin thành viên "${name}" thành công!`, "success");
+      };
+    }
+
+    if (btnDeleteMemberFromModal) {
+      btnDeleteMemberFromModal.onclick = () => {
+        const mId = document.getElementById("editMemberId").value;
+        const member = appState.members.find(m => m.id === mId);
+        if (!member) return;
+
+        if (appState.members.length <= 1) {
+          showToast("Nhóm phải có tối thiểu 1 thành viên!", "warning");
+          return;
+        }
+
+        // Xóa khỏi danh sách thành viên
+        appState.members = appState.members.filter(m => m.id !== mId);
+
+        // Hủy nhận việc của các task thuộc thành viên bị xóa
+        appState.tasks.forEach(t => {
+          if (t.assigneeId === mId) {
+            t.assigneeId = null;
+            t.assigneeName = "Chưa nhận";
+            t.assigneeAvatar = "";
+            t.status = "todo";
+          }
+        });
+
+        // Xóa khỏi danh sách ứng viên bầu cử nếu có
+        appState.election.candidates = appState.election.candidates.filter(c => c.memberId !== mId);
+
+        // Nếu thành viên bị xóa là currentUser thì chuyển sang người đầu tiên
+        if (appState.currentUser && appState.currentUser.id === mId) {
+          appState.currentUser = { ...appState.members[0] };
+          renderUserUI();
+        }
+
+        saveState();
+        renderAllModules();
+        editMemberModal.classList.remove("active");
+        showToast(`Đã xóa thành viên "${member.name}" khỏi nhóm.`, "warning");
+      };
+    }
   }
+
+  function openEditMemberModal(memberId) {
+    const member = appState.members.find(m => m.id === memberId);
+    if (!member) return;
+
+    const modal = document.getElementById("editMemberModal");
+    const idInput = document.getElementById("editMemberId");
+    const nameInput = document.getElementById("editMemberName");
+    const stuInput = document.getElementById("editMemberStudentId");
+    const emailInput = document.getElementById("editMemberEmail");
+    const roleSelect = document.getElementById("editMemberRole");
+    const statusSelect = document.getElementById("editMemberStatus");
+    const skillsInput = document.getElementById("editMemberSkills");
+    const avatarInput = document.getElementById("editMemberAvatar");
+    const avatarPreview = document.getElementById("editMemberAvatarPreview");
+
+    if (idInput) idInput.value = member.id;
+    if (nameInput) nameInput.value = member.name;
+    if (stuInput) stuInput.value = member.studentId;
+    if (emailInput) emailInput.value = member.email;
+    if (roleSelect) roleSelect.value = member.role;
+    if (statusSelect) statusSelect.value = member.status;
+    if (skillsInput) skillsInput.value = (member.skills || []).join(", ");
+    if (avatarInput) avatarInput.value = member.avatar || "";
+    if (avatarPreview) avatarPreview.src = member.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80";
+
+    modal.classList.add("active");
+  }
+
+  // Đóng modal khi bấm ra ngoài backdrop hoặc bấm phím Escape
+  document.querySelectorAll(".modal-overlay").forEach(overlay => {
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) {
+        overlay.classList.remove("active");
+      }
+    });
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
+    }
+  });
 
   // ==========================================================================
   // TIỆN ÍCH AN TOÀN XSS
