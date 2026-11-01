@@ -642,6 +642,51 @@
   gap: 1rem;
 }
 
+/* Quick Demo Pills */
+.auth-quick-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.auth-quick-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  background-color: var(--bg-card, #FFFFFF);
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: 500;
+  color: var(--text-main, #1F2937);
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
+}
+
+.auth-quick-pill:hover {
+  background-color: var(--color-primary-light, #EFF6FF);
+  border-color: var(--color-primary, #2563EB);
+  color: var(--color-primary, #2563EB);
+  transform: translateY(-1px);
+}
+
+.auth-quick-pill img {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.auth-helper-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm, 0.875rem);
+  margin-top: 0.5rem;
+}
+
 /* ==========================================================================
    MOBILE & TABLET RESPONSIVE FOR MODULES (@media max-width: 768px)
    Bắt buộc theo yêu cầu hệ thống

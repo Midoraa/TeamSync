@@ -4,14 +4,56 @@
  * Tuân thủ đầy đủ yêu cầu Giai đoạn 2 & Strict Design System
  */
 
+// ==========================================================================
+// TIỆN ÍCH TOÀN CỤC (GLOBAL UTILITIES - SẴN SÀNG NGAY KHI TẢI FILE)
+// ==========================================================================
+function escapeHTML(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+window.escapeHTML = escapeHTML;
+
+function showToast(message, type = "success") {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${type}`;
+  
+  let icon = "✓";
+  if (type === "warning") icon = "⚠️";
+  if (type === "danger") icon = "✕";
+
+  toast.innerHTML = `
+    <span style="font-weight: bold; font-size: 1.1rem;">${icon}</span>
+    <div style="flex: 1; font-size: 0.875rem;">${message}</div>
+  `;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.transition = "all 0.3s ease";
+    toast.style.opacity = "0";
+    toast.style.transform = "translateX(100%)";
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+window.showToast = showToast;
+
+// Biến trạng thái toàn cục cho các bộ lọc
+var appState = null;
+var currentTaskFilter = "all";
+var currentTaskSearchQuery = "";
+var currentMemberSearchQuery = "";
+
 document.addEventListener("DOMContentLoaded", () => {
   // 1. KHỞI TẠO STATE TỪ LOCALSTORAGE HOẶC DỮ LIỆU MẪU MOCKDATA
-  let appState = initAppState();
-
-  // Biến lưu trữ bộ lọc hiện tại
-  let currentTaskFilter = "all";
-  let currentTaskSearchQuery = "";
-  let currentMemberSearchQuery = "";
+  appState = initAppState();
 
   // 2. KHỞI TẠO CÁC SỰ KIỆN GIAO DIỆN CHÍNH
   initNavigation();
@@ -47,36 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function saveState(state = appState) {
     localStorage.setItem("TAM_APP_STATE", JSON.stringify(state));
   }
-
-  // ==========================================================================
-  // THÔNG BÁO TOAST THÔNG MINH
-  // ==========================================================================
-  function showToast(message, type = "success") {
-    const container = document.getElementById("toastContainer");
-    if (!container) return;
-
-    const toast = document.createElement("div");
-    toast.className = `toast toast-${type}`;
-    
-    let icon = "✓";
-    if (type === "warning") icon = "⚠️";
-    if (type === "danger") icon = "✕";
-
-    toast.innerHTML = `
-      <span style="font-weight: bold; font-size: 1.1rem;">${icon}</span>
-      <div style="flex: 1; font-size: 0.875rem;">${message}</div>
-    `;
-
-    container.appendChild(toast);
-
-    setTimeout(() => {
-      toast.style.transition = "all 0.3s ease";
-      toast.style.opacity = "0";
-      toast.style.transform = "translateX(100%)";
-      setTimeout(() => toast.remove(), 300);
-    }, 3500);
-  }
-  window.showToast = showToast;
 
   // ==========================================================================
   // ĐIỀU HƯỚNG TABS & GIAO DIỆN
@@ -153,137 +165,346 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==========================================================================
   // MODULE 1: AUTHENTICATION SYSTEM & USER SWITCHER
   // ==========================================================================
-  function initAuthSystem() {
-    const authModal = document.getElementById("authModal");
-    const openAuthBtn = document.getElementById("btnOpenAuth");
-    const closeAuthBtn = document.getElementById("btnCloseAuth");
-    const authForm = document.getElementById("authForm");
-    const authToggleTab = document.getElementById("authToggleTab");
-    const authSubmitBtn = document.getElementById("authSubmitBtn");
-    const btnLogout = document.getElementById("btnLogoutBtn");
+  const GUEST_USER = {
+    id: "guest",
+    name: "Khách (Chưa đăng nhập)",
+    studentId: "---",
+    email: "guest@edu.vn",
+    role: "Khách",
+    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+    status: "offline"
+  };
 
-    const authNameGroup = document.getElementById("authNameGroup");
-    const authStudentIdGroup = document.getElementById("authStudentIdGroup");
-    const authTitle = document.getElementById("authModalTitle");
+  function isGuest() {
+    return !appState.currentUser || appState.currentUser.id === "guest";
+  }
 
-    let isRegisterMode = false;
-
-    // Cập nhật UI theo người dùng hiện tại
-    renderUserUI();
-    renderQuickUserSwitcher();
-
-    if (openAuthBtn) {
-      openAuthBtn.addEventListener("click", () => {
-        if (authModal) authModal.classList.add("active");
-        renderQuickUserSwitcher();
-      });
-    }
-
-    if (closeAuthBtn) {
-      closeAuthBtn.addEventListener("click", () => {
-        if (authModal) authModal.classList.remove("active");
-      });
-    }
-
-    if (authToggleTab) {
-      authToggleTab.addEventListener("click", (e) => {
-        e.preventDefault();
-        isRegisterMode = !isRegisterMode;
-
-        if (isRegisterMode) {
-          authTitle.textContent = "Đăng Ký Tài Khoản Mới";
-          authSubmitBtn.textContent = "Đăng Ký Ngay";
-          authToggleTab.textContent = "Đã có tài khoản? Đăng nhập";
-          if (authNameGroup) authNameGroup.style.display = "block";
-          if (authStudentIdGroup) authStudentIdGroup.style.display = "block";
-        } else {
-          authTitle.textContent = "Tài Khoản & Đăng Nhập";
-          authSubmitBtn.textContent = "Đăng Nhập";
-          authToggleTab.textContent = "Chưa có tài khoản? Đăng ký ngay";
-          if (authNameGroup) authNameGroup.style.display = "none";
-          if (authStudentIdGroup) authStudentIdGroup.style.display = "none";
-        }
-      });
-    }
-
-    if (authForm) {
-      authForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const email = document.getElementById("authEmail").value.trim();
-        const password = document.getElementById("authPassword").value;
-        const name = document.getElementById("authName") ? document.getElementById("authName").value.trim() : "";
-        const studentId = document.getElementById("authStudentId") ? document.getElementById("authStudentId").value.trim() : "";
-
-        if (!email) {
-          showToast("Vui lòng nhập Email sinh viên!", "warning");
-          return;
-        }
-
-        if (password.length < 6) {
-          showToast("Mật khẩu cần tối thiểu 6 ký tự!", "warning");
-          return;
-        }
-
-        // Kiểm tra xem email có thuộc thành viên nhóm không
-        const existingMember = appState.members.find(m => m.email.toLowerCase() === email.toLowerCase());
-
-        if (existingMember) {
-          appState.currentUser = { ...existingMember };
-        } else {
-          const newUserId = "mem-" + Date.now();
-          const newUser = {
-            id: newUserId,
-            name: name || email.split("@")[0].toUpperCase(),
-            studentId: studentId || "2021" + Math.floor(1000 + Math.random() * 9000),
-            email: email,
-            role: "Thành viên",
-            skills: ["Học viên mới"],
-            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
-            status: "online",
-            tasksCompleted: 0,
-            tasksActive: 0,
-            votes: 0
-          };
-          appState.members.push(newUser);
-          appState.currentUser = newUser;
-        }
-
-        saveState();
-        renderUserUI();
-        renderAllModules();
-        if (authModal) authModal.classList.remove("active");
-        showToast(`Đăng nhập thành công! Xin chào ${appState.currentUser.name}`, "success");
-      });
-    }
-
-    if (btnLogout) {
-      btnLogout.addEventListener("click", () => {
-        appState.currentUser = {
-          id: "guest",
-          name: "Khách (Chưa đăng nhập)",
-          studentId: "---",
-          email: "guest@edu.vn",
-          role: "Khách",
-          avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80"
-        };
-        saveState();
-        renderUserUI();
-        if (authModal) authModal.classList.remove("active");
-        showToast("Bạn đã đăng xuất khỏi hệ thống.", "warning");
-      });
+  function openAuthModal(startTab = "login") {
+    const modal = document.getElementById("authModal");
+    if (modal) {
+      modal.classList.add("active");
+      switchAuthTab(startTab);
     }
   }
 
-  function renderUserUI() {
-    const userNameDisplay = document.getElementById("headerUserName");
-    const userRoleDisplay = document.getElementById("sidebarUserRole");
-    const userFullNameDisplay = document.getElementById("sidebarUserName");
+  function closeAuthModal() {
+    const modal = document.getElementById("authModal");
+    if (modal) modal.classList.remove("active");
+  }
 
-    if (appState.currentUser) {
-      if (userNameDisplay) userNameDisplay.textContent = appState.currentUser.name;
-      if (userFullNameDisplay) userFullNameDisplay.textContent = appState.currentUser.name;
-      if (userRoleDisplay) userRoleDisplay.textContent = `${appState.currentUser.role} • ${appState.currentUser.studentId}`;
+  function switchAuthTab(tab) {
+    // tabs
+    const tabs = { login: "tabLogin", register: "tabRegister", switch: "tabSwitch" };
+    // panels
+    const panels = { login: "panelLogin", register: "panelRegister", switch: "panelSwitch" };
+
+    Object.entries(tabs).forEach(([key, id]) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle("active", key === tab);
+    });
+    Object.entries(panels).forEach(([key, id]) => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = key === tab ? "block" : "none";
+    });
+
+    if (tab === "switch") renderQuickUserSwitcher();
+    if (tab === "login") renderQuickLoginPills();
+  }
+
+  function doLogout() {
+    appState.currentUser = { ...GUEST_USER };
+    saveState();
+    renderUserUI();
+    renderAllModules();
+    closeDropdown();
+    const emailInput = document.getElementById("authEmail");
+    const pwInput = document.getElementById("authPassword");
+    if (emailInput) emailInput.value = "";
+    if (pwInput) pwInput.value = "";
+    showToast("Bạn đã đăng xuất khỏi hệ thống thành công.", "warning");
+  }
+
+  function doLogin(user) {
+    appState.currentUser = { ...user };
+    saveState();
+    renderUserUI();
+    renderAllModules();
+    closeAuthModal();
+    showToast(`Đăng nhập thành công! Xin chào ${user.name} 👋`, "success");
+  }
+
+  // --- Header dropdown ---
+  let dropdownOpen = false;
+
+  function openDropdown() {
+    const menu = document.getElementById("userDropdownMenu");
+    const btn = document.getElementById("btnHeaderProfile");
+    if (menu) menu.classList.add("active");
+    if (btn) btn.classList.add("active");
+    dropdownOpen = true;
+  }
+
+  function closeDropdown() {
+    const menu = document.getElementById("userDropdownMenu");
+    const btn = document.getElementById("btnHeaderProfile");
+    if (menu) menu.classList.remove("active");
+    if (btn) btn.classList.remove("active");
+    dropdownOpen = false;
+  }
+
+  function initAuthSystem() {
+    // Cập nhật UI theo người dùng hiện tại
+    renderUserUI();
+
+    // ----- Auth Modal Tabs -----
+    const tabLogin    = document.getElementById("tabLogin");
+    const tabRegister = document.getElementById("tabRegister");
+    const tabSwitch   = document.getElementById("tabSwitch");
+    const closeAuthBtn = document.getElementById("btnCloseAuth");
+
+    if (tabLogin)    tabLogin.addEventListener("click",    () => switchAuthTab("login"));
+    if (tabRegister) tabRegister.addEventListener("click", () => switchAuthTab("register"));
+    if (tabSwitch)   tabSwitch.addEventListener("click",   () => switchAuthTab("switch"));
+    if (closeAuthBtn) closeAuthBtn.addEventListener("click", closeAuthModal);
+
+    // Close modal when clicking overlay
+    const authModal = document.getElementById("authModal");
+    if (authModal) {
+      authModal.addEventListener("click", (e) => {
+        if (e.target === authModal) closeAuthModal();
+      });
     }
+
+    // ----- Login Form -----
+    const loginForm = document.getElementById("authLoginForm");
+    if (loginForm) {
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const query = document.getElementById("authEmail").value.trim().toLowerCase();
+        const password = document.getElementById("authPassword").value;
+
+        if (!query) { showToast("Vui lòng nhập Email hoặc MSSV sinh viên!", "warning"); return; }
+        if (password.length < 6) { showToast("Mật khẩu cần tối thiểu 6 ký tự!", "warning"); return; }
+
+        const existingMember = appState.members.find(m => 
+          m.email.toLowerCase() === query || 
+          m.studentId.toLowerCase() === query
+        );
+        if (existingMember) {
+          doLogin(existingMember);
+        } else {
+          showToast("Tài khoản chưa có trong nhóm. Bạn có thể nhấn tab 'Đăng Ký' hoặc chọn ở 'Chọn Nhanh'!", "warning");
+        }
+      });
+    }
+
+    // ----- Register Form -----
+    const registerForm = document.getElementById("authRegisterForm");
+    if (registerForm) {
+      registerForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name      = document.getElementById("regName").value.trim();
+        const studentId = document.getElementById("regStudentId").value.trim();
+        const email     = document.getElementById("regEmail").value.trim();
+        const password  = document.getElementById("regPassword").value;
+        const passwordConfirm = document.getElementById("regPasswordConfirm").value;
+
+        if (!name)      { showToast("Vui lòng nhập họ và tên!", "warning"); return; }
+        if (!studentId) { showToast("Vui lòng nhập MSSV!", "warning"); return; }
+        if (!email)     { showToast("Vui lòng nhập Email sinh viên!", "warning"); return; }
+        if (password.length < 6) { showToast("Mật khẩu cần tối thiểu 6 ký tự!", "warning"); return; }
+        if (password !== passwordConfirm) { showToast("Mật khẩu xác nhận không khớp!", "danger"); return; }
+
+        const alreadyExists = appState.members.find(m => 
+          m.email.toLowerCase() === email.toLowerCase() ||
+          m.studentId.toLowerCase() === studentId.toLowerCase()
+        );
+        if (alreadyExists) { 
+          showToast("Email hoặc MSSV này đã tồn tại trong nhóm. Hãy đăng nhập!", "warning"); 
+          return; 
+        }
+
+        const newUser = {
+          id: "mem-" + Date.now(),
+          name,
+          studentId,
+          email,
+          role: "Thành viên",
+          skills: ["Thành viên mới"],
+          avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+          status: "online",
+          tasksCompleted: 0,
+          tasksActive: 0,
+          votes: 0
+        };
+        appState.members.push(newUser);
+        doLogin(newUser);
+        showToast(`Tạo tài khoản thành công! Xin chào ${name} 🎉`, "success");
+      });
+    }
+
+    // ----- Password Toggle Buttons -----
+    const btnTogglePw = document.getElementById("btnTogglePassword");
+    if (btnTogglePw) {
+      btnTogglePw.addEventListener("click", () => {
+        const pwInput = document.getElementById("authPassword");
+        if (pwInput) {
+          const isHidden = pwInput.type === "password";
+          pwInput.type = isHidden ? "text" : "password";
+          btnTogglePw.textContent = isHidden ? "🙈" : "👁";
+        }
+      });
+    }
+    const btnToggleRegPw = document.getElementById("btnToggleRegPassword");
+    if (btnToggleRegPw) {
+      btnToggleRegPw.addEventListener("click", () => {
+        const pwInput = document.getElementById("regPassword");
+        if (pwInput) {
+          const isHidden = pwInput.type === "password";
+          pwInput.type = isHidden ? "text" : "password";
+          btnToggleRegPw.textContent = isHidden ? "🙈" : "👁";
+        }
+      });
+    }
+
+    // ----- Header Dropdown Toggle -----
+    const btnHeaderProfile = document.getElementById("btnHeaderProfile");
+    if (btnHeaderProfile) {
+      btnHeaderProfile.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (dropdownOpen) closeDropdown(); else openDropdown();
+      });
+    }
+
+    // Close dropdown when clicking elsewhere
+    document.addEventListener("click", (e) => {
+      if (dropdownOpen) {
+        const wrapper = document.getElementById("headerUserWrapper");
+        if (wrapper && !wrapper.contains(e.target)) closeDropdown();
+      }
+    });
+
+    // Dropdown actions
+    const btnDropdownSwitch  = document.getElementById("btnDropdownSwitch");
+    const btnDropdownProfile = document.getElementById("btnDropdownProfile");
+    const btnDropdownLogout  = document.getElementById("btnDropdownLogout");
+
+    if (btnDropdownSwitch) {
+      btnDropdownSwitch.addEventListener("click", () => {
+        closeDropdown();
+        openAuthModal("switch");
+      });
+    }
+    if (btnDropdownProfile) {
+      btnDropdownProfile.addEventListener("click", () => {
+        closeDropdown();
+        // Mở tab thành viên và cuộn đến thẻ của người dùng hiện tại
+        const tabMem = document.querySelector('[data-tab="members"]');
+        if (tabMem) tabMem.click();
+        showToast("Đang xem hồ sơ cá nhân trong tab Thành viên.", "success");
+      });
+    }
+    if (btnDropdownLogout) {
+      btnDropdownLogout.addEventListener("click", () => {
+        doLogout();
+      });
+    }
+
+    // ----- Header Guest Buttons -----
+    const btnHeaderLogin    = document.getElementById("btnHeaderLogin");
+    const btnHeaderRegister = document.getElementById("btnHeaderRegister");
+    if (btnHeaderLogin)    btnHeaderLogin.addEventListener("click",    () => openAuthModal("login"));
+    if (btnHeaderRegister) btnHeaderRegister.addEventListener("click", () => openAuthModal("register"));
+
+    // ----- Sidebar Buttons -----
+    const btnSidebarSwitch  = document.getElementById("btnSidebarSwitch");
+    const btnSidebarLogout  = document.getElementById("btnSidebarLogout");
+    const btnSidebarLogin   = document.getElementById("btnSidebarLogin");
+
+    if (btnSidebarSwitch) {
+      btnSidebarSwitch.addEventListener("click", () => {
+        if (window.closeMobileSidebar) window.closeMobileSidebar();
+        openAuthModal("switch");
+      });
+    }
+    if (btnSidebarLogout) {
+      btnSidebarLogout.addEventListener("click", () => {
+        if (window.closeMobileSidebar) window.closeMobileSidebar();
+        doLogout();
+      });
+    }
+    if (btnSidebarLogin) {
+      btnSidebarLogin.addEventListener("click", () => {
+        if (window.closeMobileSidebar) window.closeMobileSidebar();
+        openAuthModal("login");
+      });
+    }
+
+    // Render quick pills on first load
+    renderQuickLoginPills();
+  }
+
+  function renderUserUI() {
+    const u = appState.currentUser;
+    const loggedIn = u && u.id !== "guest";
+
+    // --- Header ---
+    const headerWrapper      = document.getElementById("headerUserWrapper");
+    const headerGuestActions = document.getElementById("headerGuestActions");
+    if (headerWrapper)      headerWrapper.style.display      = loggedIn ? "flex" : "none";
+    if (headerGuestActions) headerGuestActions.style.display = loggedIn ? "none" : "flex";
+
+    if (loggedIn) {
+      const headerAvatar = document.getElementById("headerUserAvatar");
+      const headerName   = document.getElementById("headerUserName");
+      const ddAvatar     = document.getElementById("dropdownAvatar");
+      const ddName       = document.getElementById("dropdownUserName");
+      const ddEmail      = document.getElementById("dropdownUserEmail");
+      const ddRole       = document.getElementById("dropdownUserRole");
+      const ddId         = document.getElementById("dropdownUserId");
+
+      if (headerAvatar) headerAvatar.src = u.avatar || GUEST_USER.avatar;
+      if (headerName)   headerName.textContent = u.name.split(" ").pop(); // Short name
+      if (ddAvatar)     ddAvatar.src  = u.avatar || GUEST_USER.avatar;
+      if (ddName)       ddName.textContent  = u.name;
+      if (ddEmail)      ddEmail.textContent = u.email;
+      if (ddRole)       ddRole.textContent  = u.role;
+      if (ddId)         ddId.textContent    = u.studentId;
+    }
+
+    // --- Sidebar ---
+    const sidebarLoggedIn = document.getElementById("sidebarLoggedInBox");
+    const sidebarGuest    = document.getElementById("sidebarGuestBox");
+    if (sidebarLoggedIn) sidebarLoggedIn.style.display = loggedIn ? "flex" : "none";
+    if (sidebarGuest)    sidebarGuest.style.display    = loggedIn ? "none"  : "flex";
+
+    if (loggedIn) {
+      const sidebarAvatar = document.getElementById("sidebarUserAvatar");
+      const sidebarName   = document.getElementById("sidebarUserName");
+      const sidebarRole   = document.getElementById("sidebarUserRole");
+      if (sidebarAvatar) sidebarAvatar.src = u.avatar || GUEST_USER.avatar;
+      if (sidebarName)   sidebarName.textContent = u.name;
+      if (sidebarRole)   sidebarRole.textContent = `${u.role} • ${u.studentId}`;
+    }
+  }
+
+  function renderQuickLoginPills() {
+    const container = document.getElementById("quickLoginPills");
+    if (!container) return;
+    container.innerHTML = appState.members.map(m => `
+      <button class="auth-quick-pill" data-member-id="${m.id}">
+        <img src="${escapeHTML(m.avatar)}" alt="${escapeHTML(m.name)}">
+        ${escapeHTML(m.name.split(" ").pop())}
+      </button>
+    `).join("");
+
+    container.querySelectorAll(".auth-quick-pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const mId = btn.getAttribute("data-member-id");
+        const found = appState.members.find(m => m.id === mId);
+        if (found) doLogin(found);
+      });
+    });
   }
 
   function renderQuickUserSwitcher() {
@@ -299,6 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div style="font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHTML(m.name)}</div>
             <div style="color: var(--text-muted); font-size: 0.7rem;">${escapeHTML(m.role)}</div>
           </div>
+          ${isCurrent ? '<span style="font-size: 0.65rem; color: var(--color-primary); margin-left: auto;">✓ Đang dùng</span>' : ''}
         </div>
       `;
     }).join("");
@@ -308,12 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const uId = card.getAttribute("data-user-id");
         const found = appState.members.find(m => m.id === uId);
         if (found) {
-          appState.currentUser = { ...found };
-          saveState();
-          renderUserUI();
-          renderAllModules();
-          const modal = document.getElementById("authModal");
-          if (modal) modal.classList.remove("active");
+          doLogin(found);
           showToast(`Đã chuyển phiên làm việc sang: ${found.name} (${found.role})`, "success");
         }
       };
@@ -528,6 +745,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleVoteCandidate(candidateId) {
+    if (isGuest()) {
+      showToast("Vui lòng đăng nhập tài khoản để bình chọn Trưởng Nhóm!", "warning");
+      openAuthModal("login");
+      return;
+    }
+
     const candidate = appState.election.candidates.find(c => c.memberId === candidateId);
     if (!candidate) return;
 
@@ -709,6 +932,11 @@ document.addEventListener("DOMContentLoaded", () => {
       completeBtn.style.display = "none";
 
       claimBtn.onclick = () => {
+        if (isGuest()) {
+          showToast("Vui lòng đăng nhập tài khoản để nhận nhiệm vụ!", "warning");
+          openAuthModal("login");
+          return;
+        }
         task.status = "in_progress";
         task.assigneeId = appState.currentUser.id;
         task.assigneeName = appState.currentUser.name;
@@ -802,6 +1030,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Xử lý gửi tin nhắn
     function handleSendMessage(text) {
+      if (isGuest()) {
+        showToast("Vui lòng đăng nhập tài khoản để gửi tin nhắn trao đổi!", "warning");
+        openAuthModal("login");
+        return;
+      }
       if (!text) return;
 
       const now = new Date();
@@ -976,6 +1209,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (submitForm) {
       submitForm.onsubmit = (e) => {
         e.preventDefault();
+        if (isGuest()) {
+          showToast("Vui lòng đăng nhập tài khoản để nộp bài tập nhóm!", "warning");
+          openAuthModal("login");
+          return;
+        }
         const note = document.getElementById("submissionNote").value.trim();
         const selectedFile = fileInput && fileInput.files.length ? fileInput.files[0].name : "DoAn_BaoCao_Nhom05.zip";
         const selectedTaskId = taskSelect ? taskSelect.value : "all";
@@ -1191,6 +1429,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (nominateForm) {
       nominateForm.onsubmit = (e) => {
         e.preventDefault();
+        if (isGuest()) {
+          showToast("Vui lòng đăng nhập tài khoản để ứng cử Trưởng Nhóm!", "warning");
+          openAuthModal("login");
+          return;
+        }
         const slogan = document.getElementById("nominateSlogan").value.trim();
         const exp = document.getElementById("nominateExperience").value.trim();
 
@@ -1476,17 +1719,5 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
     }
   });
-
-  // ==========================================================================
-  // TIỆN ÍCH AN TOÀN XSS
-  // ==========================================================================
-  function escapeHTML(str) {
-    if (!str) return "";
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
 });
+

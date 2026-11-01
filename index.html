@@ -96,19 +96,34 @@
       </nav>
 
       <!-- Sidebar User Profile Footer -->
-      <div class="sidebar-footer">
-        <div class="user-avatar-wrapper">
-          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
-            alt="Avatar" class="user-avatar">
-          <div class="status-dot"></div>
+      <div class="sidebar-footer" id="sidebarFooter">
+        <!-- Logged In State Box -->
+        <div class="sidebar-footer-inner" id="sidebarLoggedInBox">
+          <div class="user-avatar-wrapper">
+            <img id="sidebarUserAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+              alt="Avatar" class="user-avatar">
+            <div class="status-dot"></div>
+          </div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarUserName">Nguyễn Hải Đăng</div>
+            <div class="sidebar-user-role" id="sidebarUserRole">Nhóm trưởng • 20210123</div>
+          </div>
+          <div class="sidebar-action-btns">
+            <button class="sidebar-btn-action" id="btnSidebarSwitch" title="Đổi tài khoản khác">
+              🔄
+            </button>
+            <button class="sidebar-btn-action btn-logout" id="btnSidebarLogout" title="Đăng xuất khỏi hệ thống">
+              🚪
+            </button>
+          </div>
         </div>
-        <div class="sidebar-user-info">
-          <div class="sidebar-user-name" id="sidebarUserName">Nguyễn Hải Đăng</div>
-          <div class="sidebar-user-role" id="sidebarUserRole">Nhóm trưởng • 20210123</div>
+
+        <!-- Logged Out (Guest) State Box -->
+        <div class="sidebar-footer-inner" id="sidebarGuestBox" style="display: none;">
+          <button class="btn btn-primary btn-sidebar-login" id="btnSidebarLogin">
+            🔑 Đăng Nhập Tài Khoản
+          </button>
         </div>
-        <button class="sidebar-btn-auth" id="btnOpenAuth" title="Đổi tài khoản">
-          🔑
-        </button>
       </div>
     </aside>
 
@@ -146,11 +161,54 @@
               <span class="notification-badge"></span>
             </button>
 
-            <button class="header-profile-btn" onclick="document.getElementById('btnOpenAuth').click()">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
-                alt="Profile" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
-              <span class="header-profile-name" id="headerUserName">Hải Đăng</span>
-            </button>
+            <!-- User Dropdown Wrapper (logged in) -->
+            <div class="header-user-wrapper" id="headerUserWrapper">
+              <button class="header-profile-btn" id="btnHeaderProfile">
+                <img id="headerUserAvatar"
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+                  alt="Profile" class="header-user-avatar">
+                <span class="header-profile-name" id="headerUserName">Hải Đăng</span>
+                <span class="header-profile-arrow">▾</span>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div class="user-dropdown-menu" id="userDropdownMenu">
+                <div class="user-dropdown-header">
+                  <img id="dropdownAvatar"
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+                    alt="Avatar" class="dropdown-avatar">
+                  <div class="dropdown-user-details">
+                    <div class="dropdown-user-name" id="dropdownUserName">Nguyễn Hải Đăng</div>
+                    <div class="dropdown-user-email" id="dropdownUserEmail">haidang.nguyen@student.edu.vn</div>
+                    <div class="dropdown-badge-row">
+                      <span class="badge" id="dropdownUserRole">Nhóm trưởng</span>
+                      <span class="dropdown-user-id" id="dropdownUserId">20210123</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="user-dropdown-body">
+                  <button class="user-dropdown-item" id="btnDropdownSwitch">
+                    <span class="dropdown-item-icon">🔄</span>
+                    Đổi tài khoản khác
+                  </button>
+                  <button class="user-dropdown-item" id="btnDropdownProfile">
+                    <span class="dropdown-item-icon">👤</span>
+                    Xem hồ sơ cá nhân
+                  </button>
+                  <div class="user-dropdown-divider"></div>
+                  <button class="user-dropdown-item item-danger" id="btnDropdownLogout">
+                    <span class="dropdown-item-icon">🚪</span>
+                    Đăng Xuất
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Guest Actions (when not logged in) -->
+            <div class="header-guest-actions" id="headerGuestActions" style="display: none;">
+              <button class="btn btn-secondary btn-header-register" id="btnHeaderRegister">Đăng Ký</button>
+              <button class="btn btn-primary btn-header-login" id="btnHeaderLogin">🔑 Đăng Nhập</button>
+            </div>
           </div>
         </div>
       </header>
@@ -585,52 +643,98 @@
        MODAL 1: ĐĂNG NHẬP / ĐĂNG KÝ (MODULE 1) & CHUYỂN USER NHANH
        ====================================================================== -->
   <div class="modal-overlay" id="authModal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 480px;">
       <div class="modal-header">
-        <h3 class="modal-title" id="authModalTitle">Tài Khoản & Đăng Nhập</h3>
+        <h3 class="modal-title" id="authModalTitle">🔐 Tài Khoản</h3>
         <button class="modal-close-btn" id="btnCloseAuth">&times;</button>
       </div>
-      <form id="authForm">
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label">Email sinh viên (*):</label>
-            <input type="email" id="authEmail" class="form-control" placeholder="haidang.nguyen@student.edu.vn"
-              required>
-          </div>
-          <div class="form-group" id="authNameGroup" style="display: none;">
-            <label class="form-label">Họ và tên:</label>
-            <input type="text" id="authName" class="form-control" placeholder="Nguyễn Văn A">
-          </div>
-          <div class="form-group" id="authStudentIdGroup" style="display: none;">
-            <label class="form-label">Mã số sinh viên (MSSV):</label>
-            <input type="text" id="authStudentId" class="form-control" placeholder="20210123">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Mật khẩu:</label>
-            <input type="password" id="authPassword" class="form-control" value="123456" required>
-          </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
-            <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
-              <input type="checkbox" checked> Ghi nhớ đăng nhập
-            </label>
-            <a href="#" id="authToggleTab">Chưa có tài khoản? Đăng ký</a>
-          </div>
+      <div class="modal-body">
+        <!-- Tab Switcher -->
+        <div class="auth-nav-tabs" id="authTabsRow">
+          <button class="auth-nav-tab active" id="tabLogin" type="button">🔑 Đăng Nhập</button>
+          <button class="auth-nav-tab" id="tabRegister" type="button">✏️ Đăng Ký</button>
+          <button class="auth-nav-tab" id="tabSwitch" type="button">⚡ Chọn Nhanh</button>
+        </div>
 
-          <!-- Đăng nhập nhanh bằng thành viên có sẵn để test tiện lợi -->
-          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
-            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem;">
-              ⚡ Hoặc chọn nhanh thành viên trong nhóm để thử nghiệm:
+        <!-- Panel: Đăng Nhập -->
+        <div id="panelLogin">
+          <form id="authLoginForm" novalidate>
+            <div class="form-group">
+              <label class="form-label">Email sinh viên (*):</label>
+              <input type="email" id="authEmail" class="form-control"
+                placeholder="haidang.nguyen@student.edu.vn" required autocomplete="email">
             </div>
-            <div class="user-switch-grid" id="quickUserSwitchGrid"></div>
+            <div class="form-group">
+              <label class="form-label">Mật khẩu (*):</label>
+              <div class="password-input-group">
+                <input type="password" id="authPassword" class="form-control"
+                  placeholder="Nhập mật khẩu..." required autocomplete="current-password">
+                <button type="button" class="btn-toggle-password" id="btnTogglePassword" title="Hiện/ẩn mật khẩu">👁</button>
+              </div>
+            </div>
+            <div class="auth-helper-row">
+              <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; font-size: 0.85rem;">
+                <input type="checkbox" id="authRemember" checked> Ghi nhớ đăng nhập
+              </label>
+              <a href="#" style="font-size: 0.85rem; color: var(--color-primary);">Quên mật khẩu?</a>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;" id="btnLoginSubmit">
+              🔑 Đăng Nhập Hệ Thống
+            </button>
+          </form>
+
+          <!-- Quick Login -->
+          <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.625rem;">⚡ Đăng nhập nhanh với thành viên demo:</div>
+            <div class="auth-quick-pills-row" id="quickLoginPills"></div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="btnLogoutBtn" style="color: var(--status-danger);">
-            Đăng Xuất
-          </button>
-          <button type="submit" class="btn btn-primary" id="authSubmitBtn">Đăng Nhập</button>
+
+        <!-- Panel: Đăng Ký -->
+        <div id="panelRegister" style="display: none;">
+          <form id="authRegisterForm" novalidate>
+            <div class="form-row-2col">
+              <div class="form-group">
+                <label class="form-label">Họ và tên (*):</label>
+                <input type="text" id="regName" class="form-control" placeholder="Nguyễn Văn A" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">MSSV (*):</label>
+                <input type="text" id="regStudentId" class="form-control" placeholder="20210123" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email sinh viên (*):</label>
+              <input type="email" id="regEmail" class="form-control"
+                placeholder="haidang.nguyen@student.edu.vn" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mật khẩu (*):</label>
+              <div class="password-input-group">
+                <input type="password" id="regPassword" class="form-control"
+                  placeholder="Tối thiểu 6 ký tự" required autocomplete="new-password">
+                <button type="button" class="btn-toggle-password" id="btnToggleRegPassword" title="Hiện/ẩn mật khẩu">👁</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Xác nhận mật khẩu (*):</label>
+              <div class="password-input-group">
+                <input type="password" id="regPasswordConfirm" class="form-control"
+                  placeholder="Nhập lại mật khẩu" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" id="btnRegisterSubmit">
+              ✏️ Tạo Tài Khoản Mới
+            </button>
+          </form>
         </div>
-      </form>
+
+        <!-- Panel: Chọn Nhanh -->
+        <div id="panelSwitch" style="display: none;">
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">Chọn thành viên để đăng nhập ngay vào phiên demo:</div>
+          <div class="user-switch-grid" id="quickUserSwitchGrid"></div>
+        </div>
+      </div>
     </div>
   </div>
 
