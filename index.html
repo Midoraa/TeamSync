@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Hệ Thống Quản Lý & Làm Bài Tập Nhóm Trực Tuyến | Nhóm 05</title>
+  <meta name="description" content="Nền tảng hỗ trợ sinh viên làm bài tập nhóm hiệu quả, phân công nhiệm vụ, bầu chọn nhóm trưởng, chat trực tuyến và theo dõi tiến độ nộp bài.">
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Favicon biểu tượng thương hiệu -->
+  <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg">
+  
+  <!-- Đường dẫn tương đối (Relative Paths) hỗ trợ GitHub Pages -->
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/modules.css">
+</head>
+<body>
+
+  <!-- Lớp phủ mờ (Backdrop) khi mở Drawer trên Mobile -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- APP SHELL LAYOUT -->
+  <div class="app-layout">
+
+    <!-- ======================================================================
+         SIDEBAR (Desktop Sticky, Mobile Drawer Overlay)
+         ====================================================================== -->
+    <aside class="app-sidebar" id="appSidebar">
+      <!-- Header thương hiệu -->
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="brand-icon">T</div>
+          <div>
+            <div>TeamSync</div>
+            <div style="font-size: 0.7rem; font-weight: 500; color: var(--text-muted);">Bài Tập Nhóm 4.0</div>
+          </div>
+        </div>
+        <!-- Nút đóng Drawer trên Mobile -->
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Đóng thanh điều hướng">✕</button>
+      </div>
+
+      <!-- Badge Nhóm hiện tại -->
+      <div class="sidebar-group-badge">
+        <div class="group-code">WEB2026-N05</div>
+        <div class="group-name">Nhóm 05 - Phát Triển Web</div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Điều hướng chính</div>
+        
+        <a href="#dashboard" class="nav-item active" data-tab="dashboard">
+          <span class="nav-icon">📊</span>
+          <span>Tổng quan & Tiến độ</span>
+        </a>
+
+        <a href="#members" class="nav-item" data-tab="members">
+          <span class="nav-icon">👥</span>
+          <span>Thành viên & Bầu chọn</span>
+        </a>
+
+        <a href="#tasks" class="nav-item" data-tab="tasks">
+          <span class="nav-icon">📋</span>
+          <span>Phân công nhiệm vụ</span>
+          <span class="nav-badge">8</span>
+        </a>
+
+        <a href="#chat" class="nav-item" data-tab="chat">
+          <span class="nav-icon">💬</span>
+          <span>Trao đổi & Chat nhóm</span>
+          <span class="nav-badge badge-warning">Mới</span>
+        </a>
+
+        <div class="nav-section-title">Đánh giá & Báo cáo</div>
+
+        <a href="#submissions" class="nav-item" data-tab="submissions">
+          <span class="nav-icon">📤</span>
+          <span>Nộp bài & Lịch sử v1.3</span>
+        </a>
+
+        <a href="#reports" class="nav-item" data-tab="reports">
+          <span class="nav-icon">📄</span>
+          <span>Tải Báo cáo Tiến độ</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar User Profile Footer -->
+      <div class="sidebar-footer">
+        <div class="user-avatar-wrapper">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="user-avatar">
+          <div class="status-dot"></div>
+        </div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebarUserName">Nguyễn Hải Đăng</div>
+          <div class="sidebar-user-role" id="sidebarUserRole">Nhóm trưởng • 20210123</div>
+        </div>
+        <button class="sidebar-btn-auth" id="btnOpenAuth" title="Đổi tài khoản">
+          🔑
+        </button>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+         MAIN CONTENT AREA
+         ====================================================================== -->
+    <main class="app-main">
+      
+      <!-- HEADER PHÍA TRÊN -->
+      <header class="app-header">
+        <div class="header-left">
+          <!-- Nút Hamburger Menu trên Mobile -->
+          <button class="btn-hamburger" id="btnHamburger" aria-label="Mở Menu điều hướng">
+            ☰
+          </button>
+          
+          <div class="page-title-box">
+            <h1 class="page-title" id="pageTitle">Tổng quan & Tiến độ</h1>
+            <div class="page-breadcrumb" id="pageBreadcrumb">Trang chủ / Bảng điều khiển</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Thanh tìm kiếm nhanh -->
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Tìm nhiệm vụ, thành viên...">
+          </div>
+
+          <!-- Thông báo & Quick Actions -->
+          <div class="header-actions">
+            <button class="btn-icon" title="Thông báo mới" onclick="showToast('Bạn không có thông báo chưa đọc nào.', 'warning')">
+              🔔
+              <span class="notification-badge"></span>
+            </button>
+            
+            <button class="header-profile-btn" onclick="document.getElementById('btnOpenAuth').click()">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Profile" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+              <span class="header-profile-name" id="headerUserName">Hải Đăng</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT CONTAINER CHO CÁC TABS -->
+      <div class="content-container">
+
+        <!-- ==================================================================
+             TAB 1: TỔNG QUAN & TIẾN ĐỘ (MODULE 9 & OVERVIEW)
+             ================================================================== -->
+        <div class="tab-panel active" id="tab-dashboard">
+          
+          <!-- Banner Chào mừng & Thông tin Đề tài -->
+          <div class="card" style="background: linear-gradient(135deg, #1E61F0, #2563EB); color: #FFFFFF; border: none;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <span class="badge" style="background: rgba(255,255,255,0.2); color: #FFFFFF; border: none; margin-bottom: 0.5rem;">
+                  Đề Tài Nhóm Môn Học IT4409
+                </span>
+                <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem;">
+                  Nền tảng số hóa quản lý và cộng tác làm bài tập nhóm
+                </h2>
+                <p style="font-size: 0.875rem; opacity: 0.9; max-width: 720px;">
+                  Giảng viên hướng dẫn: <strong>TS. Trần Văn Nam</strong> • Hạn nộp báo cáo cuối kỳ: <strong>18/11/2026</strong>
+                </p>
+              </div>
+              <button class="btn" style="background: #FFFFFF; color: var(--color-primary); font-weight: 600;" onclick="document.querySelector('[data-tab=\'tasks\']').click()">
+                🚀 Xem Bảng Nhiệm Vụ
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Thẻ Thống kê Số liệu nhanh -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon-wrapper stat-icon-blue">📋</div>
+              <div class="stat-info">
+                <div class="stat-label">Tổng nhiệm vụ</div>
+                <div class="stat-value" id="statTotalTasks">8</div>
+                <div class="stat-subtext">Đã phân công 100%</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrapper stat-icon-green">✅</div>
+              <div class="stat-info">
+                <div class="stat-label">Đã hoàn thành</div>
+                <div class="stat-value" id="statDoneTasks">2</div>
+                <div class="stat-subtext" style="color: var(--status-success);">Đúng tiến độ</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrapper stat-icon-amber">⚡</div>
+              <div class="stat-info">
+                <div class="stat-label">Đang thực hiện</div>
+                <div class="stat-value" id="statInProgressTasks">2</div>
+                <div class="stat-subtext">2 thành viên phụ trách</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon-wrapper stat-icon-purple">⏳</div>
+              <div class="stat-info">
+                <div class="stat-label">Chưa hoàn thành</div>
+                <div class="stat-value" id="statTodoTasks">4</div>
+                <div class="stat-subtext">Cần nhận và làm</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thanh Tiến độ Tổng quan Dự án -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">📈 Tiến Độ Hoàn Thành Dự Án</h3>
+                <div class="card-desc">Tỉ lệ hoàn thành các đầu mục công việc được giao trong đề tài</div>
+              </div>
+              <span class="badge badge-primary" id="statPercentText">25% Hoàn thành</span>
+            </div>
+            
+            <div class="progress-container">
+              <div class="progress-track" style="height: 12px;">
+                <div class="progress-fill" id="statProgressFill" style="width: 25%;"></div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+              <span>Giai đoạn 1: Khởi động (100%)</span>
+              <span>Giai đoạn 2: Phát triển (40%)</span>
+              <span>Giai đoạn 3: Báo cáo & Nộp (Chưa bắt đầu)</span>
+            </div>
+          </div>
+
+          <!-- Tiến độ Đóng góp Theo Thành viên (Module 9 bổ trợ) -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">👥 Đóng Góp Công Việc Theo Thành Viên</h3>
+                <div class="card-desc">Thống kê số nhiệm vụ đã hoàn thành của từng thành viên trong nhóm</div>
+              </div>
+            </div>
+            <div class="contribution-list" id="memberContributionsList"></div>
+          </div>
+
+          <!-- Lịch sử Hoạt Động Gần Đây -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">⚡ Hoạt Động Gần Đây Của Nhóm</h3>
+              <button class="btn btn-secondary btn-sm" onclick="showToast('Dữ liệu hoạt động đã được làm mới.', 'success')">
+                Làm mới
+              </button>
+            </div>
+            <div id="recentActivitiesList"></div>
+          </div>
+
+        </div>
+
+        <!-- ==================================================================
+             TAB 2: THÀNH VIÊN & BẦU CHỌN NHÓM TRƯỞNG (MODULE 2 & 3)
+             ================================================================== -->
+        <div class="tab-panel" id="tab-members">
+          
+          <!-- Thanh điều khiển Nhóm & Thêm thành viên -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">👥 Quản Lý Thành Viên Nhóm</h3>
+                <div class="card-desc">Mã nhóm: <strong id="memberGroupCodeDisplay">WEB2026-N05</strong> • <span id="memberCountDisplay">5</span> Thành viên chính thức</div>
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-secondary" id="btnOpenCreateGroup">
+                  ⚙️ Thông Tin / Tạo Nhóm Mới
+                </button>
+              </div>
+            </div>
+
+            <!-- Toolbar Tìm kiếm thành viên -->
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+              <div class="module-search-wrapper">
+                <span class="module-search-icon">🔍</span>
+                <input type="text" id="searchMemberInput" class="module-search-input" placeholder="Tìm thành viên theo tên, email, MSSV hoặc kỹ năng...">
+              </div>
+            </div>
+
+            <!-- Form Thêm thành viên theo Họ tên, Email, MSSV -->
+            <form id="addMemberForm" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+              <input type="text" id="addMemberName" class="form-control" placeholder="Họ và tên sinh viên..." style="flex: 1; min-width: 160px;" required>
+              <input type="email" id="addMemberEmail" class="form-control" placeholder="Email sinh viên..." style="flex: 1.2; min-width: 200px;" required>
+              <input type="text" id="addMemberStudentId" class="form-control" placeholder="MSSV..." style="width: 130px;" required>
+              <button type="submit" class="btn btn-primary">
+                ➕ Thêm Thành Viên
+              </button>
+            </form>
+
+            <!-- Lưới danh sách thành viên -->
+            <div class="members-grid" id="membersGrid"></div>
+          </div>
+
+          <!-- Bầu chọn Nhóm trưởng (Module 3) -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">🗳️ Bầu Chọn Nhóm Trưởng Dân Chủ</h3>
+                <div class="card-desc">Ứng viên có số phiếu bầu cao nhất sẽ tự động được cập nhật làm Nhóm Trưởng chính thức.</div>
+              </div>
+              <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                <span class="badge badge-success">Đang mở bình chọn</span>
+                <button class="btn btn-outline btn-sm" id="btnOpenNominate">
+                  🙋 Ứng Cử Nhóm Trưởng
+                </button>
+              </div>
+            </div>
+
+            <div class="candidates-grid" id="candidatesGrid"></div>
+          </div>
+
+        </div>
+
+        <!-- ==================================================================
+             TAB 3: BẢNG PHÂN CÔNG & NHẬN NHIỆM VỤ (MODULE 4 & 5)
+             ================================================================== -->
+        <div class="tab-panel" id="tab-tasks">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">📋 Bảng Phân Công & Nhận Nhiệm Vụ</h3>
+                <div class="card-desc">Xem chi tiết đầu việc, thời hạn và bấm "Nhận nhiệm vụ" để bắt đầu thực hiện</div>
+              </div>
+              <button class="btn btn-primary" id="btnOpenCreateTask">
+                ➕ Thêm Nhiệm Vụ Mới
+              </button>
+            </div>
+
+            <!-- Toolbar lọc trạng thái & Tìm kiếm -->
+            <div class="tasks-toolbar">
+              <div class="filter-tabs">
+                <button class="filter-tab-btn active" data-filter="all">Tất cả (<span id="taskCountAll">8</span>)</button>
+                <button class="filter-tab-btn" data-filter="todo">Chưa nhận</button>
+                <button class="filter-tab-btn" data-filter="in_progress">Đang làm</button>
+                <button class="filter-tab-btn" data-filter="done">Hoàn thành</button>
+              </div>
+
+              <div class="module-search-wrapper">
+                <span class="module-search-icon">🔍</span>
+                <input type="text" id="searchTaskInput" class="module-search-input" placeholder="Tìm theo mã hoặc tên công việc...">
+              </div>
+            </div>
+
+            <!-- Bảng Dữ liệu Responsive (overflow-x: auto) -->
+            <div class="table-responsive">
+              <table class="app-table">
+                <thead>
+                  <tr>
+                    <th>Mã CV</th>
+                    <th>Tên Nhiệm Vụ & Mô Tả</th>
+                    <th>Độ Ưu Tiên</th>
+                    <th>Hạn Chót</th>
+                    <th>Người Phụ Trách</th>
+                    <th>Thao Tác</th>
+                  </tr>
+                </thead>
+                <tbody id="tasksTableBody"></tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 4: TRAO ĐỔI & CHAT NHÓM (MODULE 6)
+             ================================================================== -->
+        <div class="tab-panel" id="tab-chat">
+          <div class="card" style="padding: 0;">
+            <div class="chat-wrapper">
+              <div class="chat-header">
+                <div>
+                  <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-main);">💬 Phòng Chat Nhóm 05</h3>
+                  <div style="font-size: 0.75rem; color: var(--status-success);">● 3 thành viên đang trực tuyến</div>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="showToast('Khung chat đã được đồng bộ.', 'success')">
+                  Đồng bộ
+                </button>
+              </div>
+
+              <!-- Danh sách tin nhắn -->
+              <div class="chat-messages" id="chatMessagesContainer"></div>
+
+              <!-- Typing Indicator khi đồng đội đang soạn tin -->
+              <div class="chat-typing-box" id="chatTypingBox">
+                <span id="chatTypingUser">Trần Mai Phương</span> đang soạn tin nhắn
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+              </div>
+
+              <!-- Gợi ý tin nhắn nhanh (Quick replies) -->
+              <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding: 0.5rem 1rem; background: var(--bg-subtle); border-top: 1px solid var(--border-color); white-space: nowrap;">
+                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn" data-msg="👋 Chào cả nhóm! Hôm nay tiến độ thế nào rồi mọi người?">👋 Chào nhóm</button>
+                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn" data-msg="👍 Mình đã nhận nhiệm vụ và đang code rồi nhé!">👍 Đang làm task</button>
+                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn" data-msg="⏰ Mọi người chú ý hạn nộp đồ án sắp đến rồi!">⏰ Nhắc deadline</button>
+                <button type="button" class="btn btn-secondary btn-sm quick-chat-btn" data-msg="📦 Mình vừa nộp bản cập nhật mới, mọi người xem nhé!">📦 Đã nộp bài</button>
+              </div>
+
+              <!-- Thanh nhập tin nhắn -->
+              <form class="chat-input-bar" id="chatForm">
+                <button type="button" class="btn-icon" id="btnAttachFile" title="Đính kèm tệp (.pdf, .docx, .zip)">
+                  📎
+                </button>
+                <input type="text" id="chatInput" class="chat-input" placeholder="Nhập tin nhắn trao đổi với nhóm (gõ Enter để gửi)..." autocomplete="off" required>
+                <button type="submit" class="btn btn-primary" style="padding: 0 1.25rem;">
+                  Gửi 🚀
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 5: NỘP BÀI & LỊCH SỬ CHỈNH SỬA (MODULE 7 & 8)
+             ================================================================== -->
+        <div class="tab-panel" id="tab-submissions">
+          
+          <!-- Khu vực Nộp Bài Drag & Drop -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">📤 Nộp Bài Tập & Báo Cáo Tiến Độ</h3>
+                <div class="card-desc">Hỗ trợ tệp zip, pdf, docx dung lượng tối đa 50MB</div>
+              </div>
+            </div>
+
+            <form id="submissionForm">
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label">Chọn nhiệm vụ nộp bài:</label>
+                <select id="submissionTaskSelect" class="form-select">
+                  <option value="all">-- Toàn bộ đồ án (Bản Báo cáo Tổng thể) --</option>
+                </select>
+              </div>
+
+              <div class="dropzone-area" id="submissionDropzone">
+                <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">📂</div>
+                <div id="dropzoneText" style="font-size: 0.95rem; color: var(--text-main);">
+                  Kéo thả file bài nộp vào đây hoặc <span style="color: var(--color-primary); font-weight: 600;">bấm để chọn tệp</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                  Chấp nhận các định dạng: .zip, .rar, .pdf, .docx
+                </div>
+                <input type="file" id="submissionFileInput" style="display: none;" accept=".zip,.rar,.pdf,.docx">
+              </div>
+
+              <div class="form-group" style="margin-top: 1.25rem;">
+                <label class="form-label">Ghi chú lần nộp này (Nội dung thay đổi):</label>
+                <textarea id="submissionNote" class="form-control" placeholder="Mô tả tóm tắt nội dung chỉnh sửa hoặc tính năng mới hoàn thiện trong lần nộp này..."></textarea>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end;">
+                <button type="submit" class="btn btn-primary">
+                  🚀 Xác Nhận Nộp Phiên Bản Mới
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Timeline Lịch sử chỉnh sửa v1.0 - v1.3 (Module 8) -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">🕒 Lịch Sử Chỉnh Sửa & Đánh Giá Điểm (v1.0 - v1.3)</h3>
+                <div class="card-desc">Toàn bộ phiên bản đã nộp và nhận xét từ giảng viên theo trục thời gian</div>
+              </div>
+            </div>
+
+            <div class="timeline" id="submissionTimeline"></div>
+          </div>
+
+        </div>
+
+        <!-- ==================================================================
+             TAB 6: TẢI BÁO CÁO TIẾN ĐỘ (MODULE 10)
+             ================================================================== -->
+        <div class="tab-panel" id="tab-reports">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">📄 Xuất Báo Cáo Tiến Độ Cá Nhân & Nhóm</h3>
+                <div class="card-desc">Tạo báo cáo tổng hợp tiến độ để in ấn nộp trực tiếp hoặc gửi giảng viên</div>
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="btnExportPDF">
+                  🖨️ In / Tải Báo Cáo PDF
+                </button>
+                <button class="btn btn-secondary" id="btnExportExcel">
+                  📊 Tải Bảng Excel (CSV)
+                </button>
+              </div>
+            </div>
+
+            <!-- Bộ lọc thành viên & trạng thái cho Báo cáo -->
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; background: var(--bg-subtle); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+              <div style="flex: 1; min-width: 200px;">
+                <label class="form-label" style="font-size: 0.8rem;">Lọc theo thành viên:</label>
+                <select id="reportMemberFilter" class="form-select">
+                  <option value="all">Tất cả thành viên trong nhóm</option>
+                </select>
+              </div>
+              <div style="flex: 1; min-width: 200px;">
+                <label class="form-label" style="font-size: 0.8rem;">Lọc theo trạng thái:</label>
+                <select id="reportStatusFilter" class="form-select">
+                  <option value="all">Tất cả trạng thái nhiệm vụ</option>
+                  <option value="done">Chỉ nhiệm vụ đã hoàn thành</option>
+                  <option value="in_progress">Chỉ nhiệm vụ đang làm</option>
+                  <option value="todo">Chỉ nhiệm vụ chưa nhận</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Bảng Preview Tóm tắt Báo Cáo -->
+            <div style="margin: 1rem 0;">
+              <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Bảng Xem Trước Báo Cáo (Preview)</h4>
+              <div class="table-responsive">
+                <table class="app-table">
+                  <thead>
+                    <tr>
+                      <th>Học viên</th>
+                      <th>MSSV</th>
+                      <th>Vai trò</th>
+                      <th>Nhiệm vụ phụ trách</th>
+                      <th>Hạn chót</th>
+                      <th>Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reportTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ======================================================================
+       MODAL 1: ĐĂNG NHẬP / ĐĂNG KÝ (MODULE 1) & CHUYỂN USER NHANH
+       ====================================================================== -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="authModalTitle">Tài Khoản & Đăng Nhập</h3>
+        <button class="modal-close-btn" id="btnCloseAuth">&times;</button>
+      </div>
+      <form id="authForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Email sinh viên (*):</label>
+            <input type="email" id="authEmail" class="form-control" placeholder="haidang.nguyen@student.edu.vn" required>
+          </div>
+          <div class="form-group" id="authNameGroup" style="display: none;">
+            <label class="form-label">Họ và tên:</label>
+            <input type="text" id="authName" class="form-control" placeholder="Nguyễn Văn A">
+          </div>
+          <div class="form-group" id="authStudentIdGroup" style="display: none;">
+            <label class="form-label">Mã số sinh viên (MSSV):</label>
+            <input type="text" id="authStudentId" class="form-control" placeholder="20210123">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu:</label>
+            <input type="password" id="authPassword" class="form-control" value="123456" required>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
+            <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+              <input type="checkbox" checked> Ghi nhớ đăng nhập
+            </label>
+            <a href="#" id="authToggleTab">Chưa có tài khoản? Đăng ký</a>
+          </div>
+
+          <!-- Đăng nhập nhanh bằng thành viên có sẵn để test tiện lợi -->
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem;">
+              ⚡ Hoặc chọn nhanh thành viên trong nhóm để thử nghiệm:
+            </div>
+            <div class="user-switch-grid" id="quickUserSwitchGrid"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btnLogoutBtn" style="color: var(--status-danger);">
+            Đăng Xuất
+          </button>
+          <button type="submit" class="btn btn-primary" id="authSubmitBtn">Đăng Nhập</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 2: TẠO NHÓM MỚI (MODULE 2)
+       ====================================================================== -->
+  <div class="modal-overlay" id="createGroupModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Cấu Hình & Tạo Nhóm Mới</h3>
+        <button class="modal-close-btn" id="btnCloseCreateGroup">&times;</button>
+      </div>
+      <form id="createGroupForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Tên nhóm:</label>
+            <input type="text" id="newGroupName" class="form-control" value="Nhóm 05 - Phát Triển Web Hiện Đại" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mã nhóm:</label>
+            <input type="text" id="newGroupCode" class="form-control" value="WEB2026-N05" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Đề tài đồ án:</label>
+            <textarea id="newGroupTopic" class="form-control" rows="3">Nền tảng số hóa quản lý và cộng tác làm bài tập nhóm cho sinh viên đại học</textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 3: CHI TIẾT NHIỆM VỤ & NHẬN VIỆC (MODULE 4 & 5)
+       ====================================================================== -->
+  <div class="modal-overlay" id="taskDetailModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="detailTaskTitle">Chi Tiết Nhiệm Vụ</h3>
+        <button class="modal-close-btn" id="btnCloseTaskDetail">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="detailTaskDesc" style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 1.25rem;"></p>
+        <div style="background: var(--bg-subtle); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem;">
+          <div>📅 Hạn nộp: <strong id="detailTaskDeadline"></strong></div>
+          <div>⚡ Độ ưu tiên: <strong id="detailTaskPriority"></strong></div>
+          <div>👤 Người phụ trách: <strong id="detailTaskAssignee"></strong></div>
+          <div>📝 Ghi chú: <span id="detailTaskNote">Không có</span></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnUnclaimTask" style="display: none; color: var(--status-danger);">
+          Hủy Nhận Nhiệm Vụ
+        </button>
+        <button type="button" class="btn btn-primary" id="btnClaimTask">
+          ✋ Nhận Nhiệm Vụ Này
+        </button>
+        <button type="button" class="btn btn-success" id="btnCompleteTask" style="display: none;">
+          ✅ Đánh Dấu Hoàn Thành
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 4: THÊM NHIỆM VỤ MỚI (MODULE 4 BỔ SUNG)
+       ====================================================================== -->
+  <div class="modal-overlay" id="createTaskModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Tạo Nhiệm Vụ Mới Cho Nhóm</h3>
+        <button class="modal-close-btn" id="btnCloseCreateTask">&times;</button>
+      </div>
+      <form id="createTaskForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Tên nhiệm vụ (*):</label>
+            <input type="text" id="newTaskTitle" class="form-control" placeholder="Ví dụ: Thiết kế giao diện Dashboard..." required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mô tả công việc (*):</label>
+            <textarea id="newTaskDesc" class="form-control" rows="3" placeholder="Chi tiết yêu cầu công việc cần thực hiện..." required></textarea>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Hạn chót hoàn thành:</label>
+              <input type="date" id="newTaskDeadline" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Độ ưu tiên:</label>
+              <select id="newTaskPriority" class="form-select">
+                <option value="Cao">Cao</option>
+                <option value="Trung bình" selected>Trung bình</option>
+                <option value="Khẩn cấp">Khẩn cấp</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Tạo & Đăng Lên Bảng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 5: ỨNG CỬ NHÓM TRƯỞNG (MODULE 3 BỔ SUNG)
+       ====================================================================== -->
+  <div class="modal-overlay" id="nominateModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Ứng Cử Trưởng Nhóm Đồ Án</h3>
+        <button class="modal-close-btn" id="btnCloseNominate">&times;</button>
+      </div>
+      <form id="nominateForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Khẩu hiệu / Tuyên ngôn hành động (*):</label>
+            <textarea id="nominateSlogan" class="form-control" rows="2" placeholder="Cam kết của bạn nếu trở thành Nhóm trưởng..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Kinh nghiệm & Kỹ năng nổi bật:</label>
+            <textarea id="nominateExperience" class="form-control" rows="2" placeholder="Kinh nghiệm quản lý, điều phối hoặc kỹ năng chuyên môn..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Xác Nhận Tham Gia Ứng Cử</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts dữ liệu mẫu và logic điều khiển -->
+  <script src="./data/mockData.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
